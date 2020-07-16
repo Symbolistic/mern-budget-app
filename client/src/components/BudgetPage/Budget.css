@@ -1,0 +1,89 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.container {
+    display: grid;
+}
+
+#income {
+    margin-bottom: 20px;
+}
+
+#info-area {
+    text-align: center;
+    padding: 100px;
+}
+
+.budget-title {
+    text-align: center;
+    background-color: #a74877;
+    padding: 5px;
+    color: #ffffff;
+    font-size: 18px;
+}
+
+#income-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    text-align: center;
+    gap: 20px;
+    color: #45818e;
+}
+
+
+.category-container {
+    height: 100%;
+    border: 1px solid black;
+}
+
+.header-area {
+    position: relative;
+}
+
+.close {
+    position: absolute;
+    top: 3px;
+    right: 5px;
+    background: none;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.category-header {
+    text-align: center;
+    border-bottom: 1px solid black;
+}
+
+
+.income-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.description {
+    text-align: right;
+    padding-top: 10px;
+    padding-right: 10px;
+    font-weight: bold;
+}
+
+.data {
+    text-align: left;
+    padding-top: 10px;
+    padding-left: 10px;
+    color: black;
+}
+
+#expense-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    text-align: center;
+    gap: 20px;
+    margin: 20px;
+}
