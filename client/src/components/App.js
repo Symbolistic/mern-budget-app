@@ -1,6 +1,7 @@
 import React from 'react';
 import '../App.css';
 import { Route, Switch } from "react-router-dom";
+import NavBar from "./NavBar/NavBar";
 import About from "./about";
 import Login from "./RegisterLogin";
 import Register from "./RegisterLogin/register";
@@ -10,6 +11,7 @@ import Budget from "./BudgetPage/Budget";
 function App() {
   return (
     <div>
+      <NavBar />
       <Switch>
         <Route exact path="/" component={HomePage} />
         <Route exact path="/about" component={About} />

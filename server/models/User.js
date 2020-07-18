@@ -26,8 +26,10 @@ const userSchema = mongoose.Schema({
         incomeCategories: [{
             name: {type: String, required: true, default: "Job 1"},
             incomeInfo: {
-                netIncome: {type: Number, required: true, default: 0},
                 paySchedule: {type: String, required: true, default: "Bi-Weekly"},
+                netIncome: {type: Number, required: true, default: 0},
+                extraIncome: {type: Number, required: true, default: 0},
+                savingsPercent: {type: Number, required: true, default: 0},
             }
         }],
         expenseCategories: [{

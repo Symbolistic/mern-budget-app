@@ -1,89 +1,208 @@
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	letter-spacing: 0.1em;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+		Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 
 .container {
-    display: grid;
+	display: grid;
+	height: 100vh;
 }
 
 #income {
-    margin-bottom: 20px;
+	display: grid;
+}
+
+#expense {
+	display: grid;
+}
+
+.addCategory {
+	margin: auto;
+	font-family: "proxima nova";
+	outline: none;
+	font-weight: 100;
+	font-size: 16px;
+	text-align: center;
+	border: 2px solid #45818e;
+	border-radius: 50px;
+	padding: 10px 15px;
+	cursor: pointer;
+	background-color: #ffffff;
+}
+
+.addCategory:hover {
+	color: #ffffff;
+	background-color: #45818e;
+	border: 2px solid black;
 }
 
 #info-area {
-    text-align: center;
-    padding: 100px;
+	text-align: center;
+	padding: 100px;
 }
 
-.budget-title {
-    text-align: center;
-    background-color: #a74877;
-    padding: 5px;
-    color: #ffffff;
-    font-size: 18px;
+.budget-income-title {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	background-color: black;
+	color: #ffffff;
+	font-size: 28px;
+	padding: 5px;
+	margin-bottom: 5px;
+}
+
+.budget-expense-title {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	background-color: black;
+	color: #ffffff;
+	font-size: 28px;
+	padding: 5px;
+	margin-bottom: 5px;
 }
 
 #income-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    text-align: center;
-    gap: 20px;
-    color: #45818e;
-}
-
-
-.category-container {
-    height: 100%;
-    border: 1px solid black;
-}
-
-.header-area {
-    position: relative;
-}
-
-.close {
-    position: absolute;
-    top: 3px;
-    right: 5px;
-    background: none;
-    border: none;
-    outline: none;
-    cursor: pointer;
-    font-weight: bold;
-    font-size: 14px;
-}
-
-.category-header {
-    text-align: center;
-    border-bottom: 1px solid black;
-}
-
-
-.income-info {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-}
-
-.description {
-    text-align: right;
-    padding-top: 10px;
-    padding-right: 10px;
-    font-weight: bold;
-}
-
-.data {
-    text-align: left;
-    padding-top: 10px;
-    padding-left: 10px;
-    color: black;
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+	justify-items: center;
+	text-align: center;
+	gap: 20px;
+	color: #45818e;
+	padding: 20px;
 }
 
 #expense-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    text-align: center;
-    gap: 20px;
-    margin: 20px;
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+	justify-items: center;
+	text-align: center;
+	gap: 20px;
+	color: #45818e;
+	padding: 20px;
+}
+
+.category-container {
+	height: 100%;
+}
+
+.expense-container {
+	height: 100%;
+}
+
+table {
+	width: 100%;
+	border-spacing: 0;
+	border-collapse: collapse;
+	table-layout: fixed;
+  }
+
+td {
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+  table td,
+  table th {
+	border: 1px solid #dadada;
+	padding: 5px;
+  }
+  table thead th {
+	text-align: left;
+  }
+  table thead th:nth-child(0),
+  table thead th:nth-child(1){
+	width: 25%;
+  }
+  
+  table thead th:nth-child(2){
+	width: 20%;
+  }
+  table thead th:nth-child(3){
+	width: 30%;
+  }
+
+.header-area {
+	position: relative;
+}
+
+
+.close {
+	position: absolute;
+	top: 3px;
+	right: 5px;
+	background: none;
+	border: none;
+	outline: none;
+	cursor: pointer;
+	font-weight: bold;
+	font-size: 14px;
+}
+
+.category-header {
+	text-align: center;
+	border-bottom: 1px solid black;
+}
+
+.description {
+	text-align: center;
+	padding-top: 10px;
+	font-weight: bold;
+	border-right: 1px dashed black;
+	padding-right: 7px;
+}
+
+.data {
+	text-align: center;
+	padding-top: 10px;
+	color: black;
+}
+
+.add-expense {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+}
+
+.expense-description {
+	text-align: center;
+	padding-top: 10px;
+	font-weight: bold;
+	padding-right: 7px;
+}
+
+.expense-price {
+	text-align: center;
+	padding-top: 10px;
+	color: black;
+}
+
+.add-expense > input {
+	border: none;
+	border-bottom: 1px solid black;
+	outline: none;
+}
+
+.expense-price {
+	display: grid;
+	grid-template-columns: 1fr 40px;
+	justify-content: center;
+	border-left: 1px dashed black;
+}
+
+.expense-data {
+	border: none;
+	border-bottom: 1px solid black;
+	outline: none;
+	margin-right: 5px;
+}
+
+.data-submit {
+	padding: 0;
 }

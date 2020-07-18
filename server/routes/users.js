@@ -98,6 +98,7 @@ router.post("/login", (req, res) => {
             // Generate Token
             user.generateToken((err, user) => {
                 if(err) return res.status(400).send(err);
+                console.log(`${user.username} has logged in`)
                 res.cookie("x_auth", user.token)
                     .status(200)
                     .json({
