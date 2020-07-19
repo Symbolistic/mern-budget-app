@@ -3,8 +3,10 @@ import "./NavBar.css"
 
 function NavBar(props) {
     return (
-        <div>
-            <h1>Budget</h1>
+        <div className="nav-container">
+            <div className="nav">
+                <h2>Budget App</h2>
+            </div>
         </div>
     );
 }

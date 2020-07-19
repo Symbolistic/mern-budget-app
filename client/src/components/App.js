@@ -10,7 +10,7 @@ import Budget from "./BudgetPage/Budget";
 
 function App() {
   return (
-    <div>
+    <div className="wrapper">
       <NavBar />
       <Switch>
         <Route exact path="/" component={HomePage} />

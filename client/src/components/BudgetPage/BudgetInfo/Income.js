@@ -5,7 +5,10 @@ import DoneIcon from "@material-ui/icons/Done";
 
 function Income({
 	setIncomeModalDisplay,
-	budget,
+    budget,
+    totalIncome,
+    calculateExpense,
+    calculateIncome,
 	setBudget,
 	variables,
 	editEntry,
@@ -16,7 +19,9 @@ function Income({
 	const fetchBudget = () => {
 		axios.post("/api/budget/getBudget", variables).then((response) => {
 			if (response.data.success) {
-				setBudget(response.data.budget.templates);
+                setBudget(response.data.budget.templates);
+                calculateIncome(response.data.budget.templates);
+                calculateExpense(response.data.budget.templates);
 			} else {
 				console.log("Failed to get budget");
 			}
@@ -86,23 +91,27 @@ function Income({
 				console.log("Failed to remove to category");
 			}
 		});
-	};
+    };
 
 	return (
-		<div id="income">
-			<h2 className="budget-income-title">Income</h2>
-			<button
-				className="addCategory"
-				name="incomeCategory"
-				onClick={() => setIncomeModalDisplay(true)}
-			>
-				Add Income Category
-			</button>
-			<div id="income-container">
+		<div id="income-container">
+
+			<div className="header-area">
+				<h2 className="budget-income-title">Total Income: ${totalIncome}</h2>
+				<button
+					className="addCategory"
+					name="incomeCategory"
+					onClick={() => setIncomeModalDisplay(true)}
+				>
+					Add Category
+				</button>
+			</div>
+
+			<div className="data-wrapper">
 				{budget[0]?.incomeCategories.length > 0
 					? budget[0].incomeCategories.map((val, index) => (
-							<div key={index} className="category-container">
-								<div className="header-area">
+							<div key={index} id="data-container">
+								<div className="data-header">
 									<h4 className="category-header">{val.name}</h4>
 									{/* Here I put the ID is so I can pass it to the onClick
                                 this way I can target the correct category by ID instead of name */}
@@ -116,7 +125,7 @@ function Income({
 									</button>
 								</div>
 
-								<table className="income-info">
+								<table id="income-data">
 									<tbody>
 										<tr>
 											{/* I use ID: RowName (PaySchedule) so I can tell the code to target
@@ -124,15 +133,19 @@ function Income({
 											<td className="description">Pay Schedule:</td>
 											<td className="data">
 												{currentlyEditing[val._id] === "paySchedule" ? (
-													<input
+													<select
 														name={`paySchedule${val._id}`}
-														onChange={handleIncomeEdit}
 														value={
 															editEntry[`paySchedule${val._id}`]
 																? editEntry[`paySchedule${val._id}`]
 																: val.incomeInfo.paySchedule
 														}
-													/>
+														onChange={handleIncomeEdit}
+													>
+														<option value="Weekly">Weekly</option>
+														<option value="Bi-Weekly">Bi-Weekly</option>
+														<option value="Monthly">Monthly</option>
+													</select>
 												) : (
 													val.incomeInfo.paySchedule
 												)}

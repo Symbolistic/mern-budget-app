@@ -7,54 +7,95 @@
 		Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 
-.container {
+.dashboard-container {
 	display: grid;
-	height: 100vh;
+	width: 100%;
+	margin: 0 auto;
+	padding: 40px;
 }
 
-#income {
-	display: grid;
-}
-
-#expense {
-	display: grid;
-}
-
-.addCategory {
-	margin: auto;
-	font-family: "proxima nova";
-	outline: none;
-	font-weight: 100;
-	font-size: 16px;
-	text-align: center;
-	border: 2px solid #45818e;
-	border-radius: 50px;
-	padding: 10px 15px;
-	cursor: pointer;
+#chart-data {
 	background-color: #ffffff;
-}
-
-.addCategory:hover {
-	color: #ffffff;
-	background-color: #45818e;
-	border: 2px solid black;
-}
-
-#info-area {
+	margin: 30px 0;
+	border-radius: 0.25rem;
+	padding: 15px;
 	text-align: center;
 	padding: 100px;
 }
 
-.budget-income-title {
-	display: flex;
-	align-items: center;
-	justify-content: center;
+#income-container {
+	background-color: #ffffff;
+	margin: 30px 0;
+	border-radius: 0.25rem;
+	padding: 30px;
+}
+
+.header-area {
+	display: grid;
+	grid-template-columns: 1fr 160px;
+	justify-content: space-evenly;
+	margin-bottom: 30px;
+}
+
+.addCategory {
+	color: #fff !important;
+	text-transform: uppercase;
+	text-decoration: none;
+	background: purple;
+	padding: 20px;
+	border-radius: 5px;
+	display: inline-block;
+	border: none;
+	transition: all 0.4s ease 0s;
+}
+
+.addCategory:hover {
+	background: #9602d1;
+	letter-spacing: 1px;
+	-webkit-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
+	-moz-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
+	box-shadow: 5px 40px -10px rgba(0, 0, 0, 0.57);
+	transition: all 0.4s ease 0s;
+}
+
+.data-wrapper {
+	width: 100%;
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
 	text-align: center;
-	background-color: black;
-	color: #ffffff;
-	font-size: 28px;
-	padding: 5px;
-	margin-bottom: 5px;
+	gap: 20px;
+	margin-top: 20px;
+}
+
+#data-container {
+	display: grid;
+	color: #45818e;
+	padding: 20px;
+}
+
+form {
+	margin-bottom: 20px;
+}
+
+.data-header {
+	position: relative;
+	margin-bottom: 10px;
+}
+
+#expense-container {
+	display: grid;
+	gap:20px;
+	background-color: #ffffff;
+	margin: 30px 0;
+	border-radius: 0.25rem;
+	padding: 30px;
+	color: #45818e;
+}
+
+#entries-data {
+	width:100%;
+	display: grid;
+	margin-top: 10px 0;
 }
 
 .budget-expense-title {
@@ -69,7 +110,7 @@
 	margin-bottom: 5px;
 }
 
-#income-container {
+/* #expense-container {
 	display: grid;
 	grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
 	justify-items: center;
@@ -77,67 +118,12 @@
 	gap: 20px;
 	color: #45818e;
 	padding: 20px;
-}
-
-#expense-container {
-	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
-	justify-items: center;
-	text-align: center;
-	gap: 20px;
-	color: #45818e;
-	padding: 20px;
-}
-
-.category-container {
-	height: 100%;
-}
-
-.expense-container {
-	height: 100%;
-}
-
-table {
-	width: 100%;
-	border-spacing: 0;
-	border-collapse: collapse;
-	table-layout: fixed;
-  }
-
-td {
-  word-break: keep-all;
-  overflow-wrap: break-word;
-}
-
-  table td,
-  table th {
-	border: 1px solid #dadada;
-	padding: 5px;
-  }
-  table thead th {
-	text-align: left;
-  }
-  table thead th:nth-child(0),
-  table thead th:nth-child(1){
-	width: 25%;
-  }
-  
-  table thead th:nth-child(2){
-	width: 20%;
-  }
-  table thead th:nth-child(3){
-	width: 30%;
-  }
-
-.header-area {
-	position: relative;
-}
-
+} */
 
 .close {
 	position: absolute;
-	top: 3px;
-	right: 5px;
+	top: 0px;
+	right: 0px;
 	background: none;
 	border: none;
 	outline: none;
@@ -146,10 +132,7 @@ td {
 	font-size: 14px;
 }
 
-.category-header {
-	text-align: center;
-	border-bottom: 1px solid black;
-}
+
 
 .description {
 	text-align: center;
@@ -187,13 +170,18 @@ td {
 	border: none;
 	border-bottom: 1px solid black;
 	outline: none;
+	padding-bottom: 5px;
 }
 
 .expense-price {
 	display: grid;
 	grid-template-columns: 1fr 40px;
 	justify-content: center;
-	border-left: 1px dashed black;
+}
+
+.expense-price > input {
+	text-align: center;
+	padding-bottom: 5px;
 }
 
 .expense-data {
@@ -205,4 +193,37 @@ td {
 
 .data-submit {
 	padding: 0;
+}
+
+
+table {
+	text-align: center;
+	border-spacing: 0;
+	border-collapse: collapse;
+	table-layout: fixed;
+}
+
+td {
+	word-break: keep-all;
+	overflow-wrap: break-word;
+}
+
+table td,
+table th {
+	border: 1px solid #dadada;
+	padding: 5px;
+}
+table thead th {
+	text-align: left;
+}
+table thead th:nth-child(0),
+table thead th:nth-child(1) {
+	width: 25%;
+}
+
+table thead th:nth-child(2) {
+	width: 20%;
+}
+table thead th:nth-child(3) {
+	width: 30%;
 }

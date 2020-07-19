@@ -3,10 +3,13 @@ import axios from "axios";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import DoneIcon from "@material-ui/icons/Done";
-
+import AddIcon from "@material-ui/icons/Add";
 function Expense({
 	setExpenseModalDisplay,
 	budget,
+	totalExpense,
+	calculateIncome,
+	calculateExpense,
 	setBudget,
 	variables,
 	editEntry,
@@ -20,6 +23,8 @@ function Expense({
 		axios.post("/api/budget/getBudget", variables).then((response) => {
 			if (response.data.success) {
 				setBudget(response.data.budget.templates);
+				calculateIncome(response.data.budget.templates);
+				calculateExpense(response.data.budget.templates);
 			} else {
 				console.log("Failed to get budget");
 			}
@@ -86,7 +91,6 @@ function Expense({
 			expenseId: expenseId,
 		};
 
-		console.log(data);
 		axios.post("/api/budget/deleteExpense", data).then((response) => {
 			if (response.data.success) {
 				fetchBudget();
@@ -97,10 +101,9 @@ function Expense({
 	};
 
 	// This will add an expense to a specific category
-	const addExpense = (event) => {
-		event.preventDefault();
-		const categoryName = event.target.name;
-		const categoryId = event.target.id;
+	const addExpense = (id, name) => {
+		const categoryId = id;
+		const categoryName = name;
 
 		const data = {
 			userId: variables.userFrom,
@@ -140,20 +143,23 @@ function Expense({
 	};
 
 	return (
-		<div id="expense">
-			<h2 className="budget-expense-title">Expense</h2>
-			<button
-				className="addCategory"
-				name="expenseCategory"
-				onClick={() => setExpenseModalDisplay(true)}
-			>
-				Add Expense Category
-			</button>
-			<div id="expense-container">
+		<div id="expense-container">
+			<div className="header-area">
+				<h2>Total Expenses: ${totalExpense}</h2>
+				<button
+					className="addCategory"
+					name="expenseCategory"
+					onClick={() => setExpenseModalDisplay(true)}
+				>
+					Add Category
+				</button>
+			</div>
+
+			<div className="data-wrapper">
 				{budget[0]?.expenseCategories.length > 0
 					? budget[0].expenseCategories.map((category, index) => (
-							<div key={index} className="category-container">
-								<div className="header-area">
+							<div key={index} className="data-container">
+								<div className="data-header">
 									<h4 className="category-header">{category.name}</h4>
 									{/* Here I put the ID is so I can pass it to the onClick
                             this way I can target the correct category by ID instead of name */}
@@ -166,24 +172,19 @@ function Expense({
 										X
 									</button>
 								</div>
-								<div>
-									{category.expenseEntries.length > 0
-										? category.expenseEntries.map((expenseEntry, index) => (
-												<table key={index} className="expense-info">
-													<tbody>
-														<tr>
+								<div id="entries-data">
+									<table>
+										<tbody>
+											{category.expenseEntries.map((expenseEntry, index) => (
+														<tr key={index} id="expense-data">
 															<td className="description">
 																{currentlyEditing[expenseEntry._id] === true ? (
 																	<input
 																		name={`description${expenseEntry._id}`}
 																		onChange={handleExpenseEdit}
 																		value={
-																			editEntry[
-																				`description${expenseEntry._id}`
-																			]
-																				? editEntry[
-																						`description${expenseEntry._id}`
-																				  ]
+																			editEntry[`description${expenseEntry._id}`]
+																				? editEntry[`description${expenseEntry._id}`]
 																				: expenseEntry.description
 																		}
 																	/>
@@ -191,7 +192,6 @@ function Expense({
 																	expenseEntry.description
 																)}
 															</td>
-
 															<td className="data">
 																{currentlyEditing[expenseEntry._id] === true ? (
 																	<input
@@ -207,8 +207,7 @@ function Expense({
 																	expenseEntry.amount
 																)}
 															</td>
-
-															<td>
+															<td className="expense-icon1">
 																{currentlyEditing[expenseEntry._id] === true ? (
 																	<DoneIcon
 																		id={expenseEntry._id}
@@ -229,8 +228,7 @@ function Expense({
 																	/>
 																)}
 															</td>
-
-															<td>
+															<td className="expense-icon2">
 																<DeleteIcon
 																	onClick={() =>
 																		deleteExpense(
@@ -241,42 +239,42 @@ function Expense({
 																/>
 															</td>
 														</tr>
-													</tbody>
-												</table>
-										  ))
-										: ""}
-								</div>
+												  ))									
+												}
+										</tbody>
+									</table>
 
-								<form className="add-expense">
-									{/* The reason I use val._id is because I want to search by id, not name
+									<form className="add-expense">
+										{/* The reason I use val._id is because I want to search by id, not name
                             just incase 2 categories have the same name, it will cause bugs. */}
-									<input
-										className="expense-description expense-data"
-										type="text"
-										name={category._id}
-										onChange={handleChange}
-										value={newEntry[category.name]}
-										placeholder="Description"
-									/>
-									<div className="expense-price">
 										<input
-											className="expense-data"
+											className="expense-description expense-data"
 											type="text"
-											name={category._id + "Price"}
+											name={category._id}
 											onChange={handleChange}
-											value={newEntry[category.name + "Price"]}
-											placeholder="Amount $$$"
+											value={newEntry[category.name]}
+											placeholder="Description"
 										/>
-										<input
-											className="data-submit"
-											id={category._id}
-											type="submit"
-											name={category.name}
-											value="+"
-											onClick={addExpense}
-										/>
-									</div>
-								</form>
+										<div className="expense-price">
+											<input
+												className="expense-data"
+												type="text"
+												name={category._id + "Price"}
+												onChange={handleChange}
+												value={newEntry[category.name + "Price"]}
+												placeholder="Amount $$$"
+											/>
+											<AddIcon
+												className="data-submit"
+												id={category._id}
+												type="submit"
+												name={category.name}
+												value="+"
+												onClick={() => addExpense(category._id, category.name)}
+											/>
+										</div>
+									</form>
+								</div>
 							</div>
 					  ))
 					: ""}

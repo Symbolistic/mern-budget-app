@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import './Modal.css';
+import "./Modal.css";
 
 const IncomeModal = (props) => {
 	const [newCategory, setNewCategory] = useState({});
@@ -11,6 +11,7 @@ const IncomeModal = (props) => {
 		axios.post("/api/budget/getBudget", variables).then((response) => {
 			if (response.data.success) {
 				props.setBudget(response.data.budget.templates);
+				props.calculateIncome(response.data.budget.templates);
 			} else {
 				console.log("Failed to get budget");
 			}
@@ -44,8 +45,8 @@ const IncomeModal = (props) => {
 		} else {
 			axios.post("/api/budget/addCategory", data).then((response) => {
 				if (response.data.success) {
-                    setNewCategory({});
-			        props.setIncomeModalDisplay(false);
+					setNewCategory({});
+					props.setIncomeModalDisplay(false);
 					fetchBudget();
 				} else {
 					console.log("Failed to add category");
@@ -66,19 +67,20 @@ const IncomeModal = (props) => {
 						<input
 							type="text"
 							name="categoryName"
-							value={newCategory["categoryName"] ? newCategory["categoryName"] : ''}
+							value={
+								newCategory["categoryName"] ? newCategory["categoryName"] : ""
+							}
 							onChange={handleNewCategory}
 						/>
 					</label>
 
 					<label>
 						Pay Schedule:
-						<input
-							type="text"
-							name="paySchedule"
-							value={newCategory["paySchedule"] ? newCategory["paySchedule"] : ''}
-							onChange={handleNewCategory}
-						/>
+						<select name="paySchedule" value={newCategory["paySchedule"] ? newCategory["paySchedule"] : "Bi-Weekly"} onChange={handleNewCategory}>
+							<option value="Weekly">Weekly</option>
+							<option value="Bi-Weekly">Bi-Weekly</option>
+							<option value="Monthly">Monthly</option>
+						</select>
 					</label>
 
 					<label>
@@ -86,7 +88,7 @@ const IncomeModal = (props) => {
 						<input
 							type="text"
 							name="netIncome"
-							value={newCategory["netIncome"] ? newCategory["netIncome"] : ''}
+							value={newCategory["netIncome"] ? newCategory["netIncome"] : ""}
 							onChange={handleNewCategory}
 						/>
 					</label>
@@ -96,7 +98,9 @@ const IncomeModal = (props) => {
 						<input
 							type="text"
 							name="extraIncome"
-							value={newCategory["extraIncome"] ? newCategory["extraIncome"] : ''}
+							value={
+								newCategory["extraIncome"] ? newCategory["extraIncome"] : ""
+							}
 							onChange={handleNewCategory}
 						/>
 					</label>
@@ -106,7 +110,11 @@ const IncomeModal = (props) => {
 						<input
 							type="text"
 							name="savingsPercent"
-							value={newCategory["savingsPercent"] ? newCategory["savingsPercent"] : ''}
+							value={
+								newCategory["savingsPercent"]
+									? newCategory["savingsPercent"]
+									: ""
+							}
 							onChange={handleNewCategory}
 						/>
 					</label>

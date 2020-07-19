@@ -11,6 +11,7 @@ function ExpenseModal(props) {
 		axios.post("/api/budget/getBudget", variables).then((response) => {
 			if (response.data.success) {
 				props.setBudget(response.data.budget.templates);
+				props.calculateIncome(response.data.budget.templates);
 			} else {
 				console.log("Failed to get budget");
 			}
