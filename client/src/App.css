@@ -6,7 +6,7 @@
 
 html, body, #root {
   position: relative;
-  min-width: fit-content;
+  min-width: fit-content; /* This line is key, this magic line made the width fit when it was glitching out */
 }
 
 .wrapper {

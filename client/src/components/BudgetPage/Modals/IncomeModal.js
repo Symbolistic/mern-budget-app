@@ -12,6 +12,7 @@ const IncomeModal = (props) => {
 			if (response.data.success) {
 				props.setBudget(response.data.budget.templates);
 				props.calculateIncome(response.data.budget.templates);
+				props.grabChartData(response.data.budget.templates);
 			} else {
 				console.log("Failed to get budget");
 			}

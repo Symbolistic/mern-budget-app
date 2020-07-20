@@ -5,23 +5,23 @@
 }
 
 .nav-container {
-    width: 100%;
     margin: 0 auto;
+    
 }
 
 .nav {
     background: rgb(170,70,185);
 background: linear-gradient(90deg, rgba(170,70,185,1) 0%, rgba(138,28,163,1) 49%, rgba(92,12,203,1) 100%);
-    width: 100%;
+    max-width: 100%;
 }
 
 .nav > h2 {
     text-align: left;
     color: #ffffff;
     font-size: 28px;
-    font-weight: 600    ;
-    padding: 15px;
-    margin-left: 5px;
+    font-weight: 400;
+    padding: 18px;
+    padding-top: 15px;
     vertical-align: middle;
     letter-spacing: 0.1em;
 }

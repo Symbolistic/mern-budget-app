@@ -16,6 +16,7 @@ function Expense({
 	currentlyEditing,
 	setCurrentlyEditing,
 	setEditEntry,
+	grabChartData,
 }) {
 	const [newEntry, setNewEntry] = useState({});
 
@@ -25,6 +26,7 @@ function Expense({
 				setBudget(response.data.budget.templates);
 				calculateIncome(response.data.budget.templates);
 				calculateExpense(response.data.budget.templates);
+				grabChartData(response.data.budget.templates);
 			} else {
 				console.log("Failed to get budget");
 			}

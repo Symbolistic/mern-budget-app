@@ -15,13 +15,15 @@ function Income({
 	currentlyEditing,
 	setCurrentlyEditing,
 	setEditEntry,
+	grabChartData,
 }) {
 	const fetchBudget = () => {
 		axios.post("/api/budget/getBudget", variables).then((response) => {
 			if (response.data.success) {
                 setBudget(response.data.budget.templates);
                 calculateIncome(response.data.budget.templates);
-                calculateExpense(response.data.budget.templates);
+				calculateExpense(response.data.budget.templates);
+				grabChartData(response.data.budget.templates);
 			} else {
 				console.log("Failed to get budget");
 			}

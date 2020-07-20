@@ -9,18 +9,50 @@
 
 .dashboard-container {
 	display: grid;
+	gap: 20px;
+	position: relative;
 	width: 100%;
+	height: 100%;
 	margin: 0 auto;
 	padding: 40px;
+	max-width: 100%;
 }
 
 #chart-data {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+	gap: 10px;
 	background-color: #ffffff;
 	margin: 30px 0;
 	border-radius: 0.25rem;
 	padding: 15px;
 	text-align: center;
-	padding: 100px;
+	width: 100%;
+	max-height: 100%;
+
+}
+
+#doughnut-chart-container {
+	border-right: 1px dashed black;
+	height: 100%;
+}
+
+#bar-chart-container {
+	height: 100%;
+}
+
+canvas {
+	height: 100%!important;
+	width: 100%!important;
+}
+
+/* This will help with the responsiveness of the bar charts since they easily glitch */
+@media screen and (max-width:730px) {
+
+	#doughnut-chart-container {
+		border-right: none;
+		border-bottom: 1px dashed black;
+	}
 }
 
 #income-container {
@@ -37,16 +69,22 @@
 	margin-bottom: 30px;
 }
 
+.header-area > h2 {
+	color: purple;
+	font-weight: 700;
+}
+
 .addCategory {
 	color: #fff !important;
 	text-transform: uppercase;
 	text-decoration: none;
 	background: purple;
-	padding: 20px;
+	padding: 15px;
 	border-radius: 5px;
 	display: inline-block;
 	border: none;
 	transition: all 0.4s ease 0s;
+	margin-left: 15px;
 }
 
 .addCategory:hover {
@@ -93,7 +131,7 @@ form {
 }
 
 #entries-data {
-	width:100%;
+	max-width:100%;
 	display: grid;
 	margin-top: 10px 0;
 }
@@ -109,16 +147,6 @@ form {
 	padding: 5px;
 	margin-bottom: 5px;
 }
-
-/* #expense-container {
-	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
-	justify-items: center;
-	text-align: center;
-	gap: 20px;
-	color: #45818e;
-	padding: 20px;
-} */
 
 .close {
 	position: absolute;
@@ -201,6 +229,9 @@ table {
 	border-spacing: 0;
 	border-collapse: collapse;
 	table-layout: fixed;
+
+
+
 }
 
 td {
