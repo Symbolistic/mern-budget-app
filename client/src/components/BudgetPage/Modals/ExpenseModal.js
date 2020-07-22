@@ -5,19 +5,7 @@ import './Modal.css';
 function ExpenseModal(props) {
 	const [newCategory, setNewCategory] = useState({});
 
-	const variables = { userFrom: localStorage.getItem("userId") };
 
-	const fetchBudget = () => {
-		axios.post("/api/budget/getBudget", variables).then((response) => {
-			if (response.data.success) {
-				props.setBudget(response.data.budget.templates);
-				props.calculateIncome(response.data.budget.templates);
-				props.grabChartData(response.data.budget.templates);
-			} else {
-				console.log("Failed to get budget");
-			}
-		});
-	};
 
 	// This handles the inputs for the modal element that will add a new category
 	const handleNewCategory = (e) => {
@@ -34,21 +22,21 @@ function ExpenseModal(props) {
 		event.preventDefault();
 
 		const data = {
+			...props.variables,
 			categoryType: event.target.name,
-			userId: variables.userFrom,
+			budgetType: "Monthly",
 			...newCategory,
 		};
-		console.log(data);
 
 		if (data.categoryType === "cancel") {
 			setNewCategory({}); // Clear input fields
 			props.setExpenseModalDisplay(false); // Exit modal
 		} else {
-			axios.post("/api/budget/addCategory", data).then((response) => {
+			axios.post("/api/expense/addExpenseGroup", data).then((response) => {
 				if (response.data.success) {
                     setNewCategory({}); // Clear input fields
                     props.setExpenseModalDisplay(false); // Exit Modal after adding data
-                    fetchBudget(); // Update the render
+                    props.fetchBudget(); // Update the render
 				} else {
 					console.log("Failed to add category");
 				}
@@ -67,8 +55,8 @@ function ExpenseModal(props) {
 						Category Name:
 						<input
 							type="text"
-							name="categoryName"
-							value={newCategory["categoryName"] ? newCategory["categoryName"] : ''}
+							name="groupName"
+							value={newCategory["groupName"] ? newCategory["groupName"] : ''}
 							onChange={handleNewCategory}
 						/>
 					</label>

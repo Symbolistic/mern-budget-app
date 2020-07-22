@@ -21,7 +21,9 @@ app.use(cookieParser());
 
 
 app.use('/api/users', require('./routes/users'));
-app.use('/api/budget', require('./routes/budget'));
+//app.use('/api/budget', require('./routes/budget'));
+app.use('/api/income', require('./routes/income'));
+app.use('/api/expense', require('./routes/expense'));
 
 
 

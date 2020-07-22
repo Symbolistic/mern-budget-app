@@ -19,50 +19,12 @@ router.get("/auth", auth, (req, res) => {
 })
 
 router.post("/register", (req, res) => {
-    const { email, username, password } = req.body
+    const { email, username, password } = req.body;
 
     const user = new User({
         email: email || "Default Email",
         username: username || "Default Username",
         password: password || "Default Password",
-        templates: [{
-
-            name: "Basic Template",
-            incomeCategories: [{
-            
-                name: "Job 1",
-                incomeInfo: {
-                    netIncome: 1000,
-                    paySchedule: "Bi-Weekly",
-                } 
-            }],
-            expenseCategories: [{
-                name: "Subscriptions",
-                expenseEntries:[{
-                    description: "Netflix",
-                    amount: 14.99,
-                },
-                {
-                    description: "Spotify",
-                    amount: 15.99,
-                },
-                {
-                    description: "Amazon Prime",
-                    amount: 9.99,
-                }
-            ]
-            },
-
-            {
-                name: "Utilities",
-                expenseEntries:[{
-                    description: "Rent",
-                    amount: 1000,
-                },
-            ]
-            }
-        ]
-        }]
     });
 
     user.save((err, doc) => {

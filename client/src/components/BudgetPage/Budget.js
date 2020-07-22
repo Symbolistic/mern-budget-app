@@ -8,8 +8,21 @@ import Expense from "./BudgetInfo/Expense";
 import { Bar, Doughnut } from 'react-chartjs-2';
 
 const Budget = () => {
-    // Budget, Income, and Expense info
-    const [budget, setBudget] = useState([]);
+    // Current Year and Month being displayed. Month is based on 0 index value (So January is 0)
+    const [year, setYear] = useState(new Date().getFullYear());
+    const [month, setMonth] = useState(new Date().getMonth());
+    const allMonths = ["January", "Febuary", "March", "April", "May", "June", "July",
+                        "August", "September", "October", "November", "December"];
+
+    // Budget: Income, and Expense info
+    const [budget, setBudget] = useState({
+        incomeGroup: [],
+        expenseGroup: []
+    });
+    const [income, setIncome] = useState([]);
+    const [expense, setExpense] = useState([]);
+    const [savings, setSavings] = useState(940);
+
     const [totalIncome, setTotalIncome] = useState('0');
     const [totalExpense, setTotalExpense] = useState('0');
 
@@ -26,16 +39,21 @@ const Budget = () => {
     const [categoryTotalExpenses, setCategoryTotalExpenses] = useState([]);
 
     // This is to check which user is currently logged in
-	const variables = { userFrom: localStorage.getItem("userId") };
+	const variables = { 
+        userFrom: localStorage.getItem("userId"),
+        month: month,
+        year: year
+    };
 
 	useEffect(() => {
 		fetchBudget();
-	}, []);
+	}, [month]);
 
-	const calculateIncome = (budget) => {
+	const calculateIncome = (income) => {
 
-        if (budget[0]) {
-            const totalIncome = budget[0].incomeCategories.reduce((acc, currVal) => {
+        if (income) {
+            const totalIncome = income.reduce((acc, currVal) => {
+                console.log(currVal)
                 const paySchedule = currVal.incomeInfo.paySchedule;
                 const netIncome = currVal.incomeInfo.netIncome;
                 const extraIncome = currVal.incomeInfo.extraIncome;
@@ -60,10 +78,10 @@ const Budget = () => {
         }
     };
     
-    const calculateExpense = (budget) => {
+    const calculateExpense = (expense) => {
 
-        if (budget[0]) {
-            const totalExpense = budget[0].expenseCategories.reduce((acc, currVal) => {
+        if (expense) {
+            const totalExpense = expense.reduce((acc, currVal) => {
 
                 // Get the total sum of this categories expense entries
                 const entriesTotal = currVal.expenseEntries.reduce((accEntries, currEntry) => {
@@ -74,13 +92,29 @@ const Budget = () => {
             setTotalExpense(totalExpense.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
         }
     };
+
+    const combineExpenseGroupsAndEntries = (groups, entries) => {
+        const expenseGroups = groups.map(val => {
+            val.expenseEntries = [];
+            return val;
+        });
+
+        entries.map(entry => {
+            const index = expenseGroups.findIndex(group => group._id === entry.entryFrom);
+            expenseGroups[index].expenseEntries.push(entry);
+        })
+
+        setExpense(expenseGroups);
+        calculateExpense(expenseGroups);
+        grabChartData(expenseGroups);
+    }
     
-    const grabChartData = (budgetData) => {
+    const grabChartData = (expenseGroups) => {
         // Grab all the data for names of categories and put it into an array
-        const categoryNames = budgetData[0].expenseCategories.map(category => category.name);
+        const categoryNames = expenseGroups.map(category => category.name);
         // Same, but we grab the total expenses (add them all up for each category) and put em into an array
-        const categoryTotalExpenses = budgetData[0].expenseCategories.map(category => {
-             return category.expenseEntries.reduce((accEntries, currEntry) => {
+        const categoryTotalExpenses = expenseGroups.map(group => {
+             return group.expenseEntries.reduce((accEntries, currEntry) => {
                 return accEntries + currEntry.amount;
             }, 0);
         });
@@ -91,16 +125,28 @@ const Budget = () => {
     }
 
 	const fetchBudget = () => {
-		axios.post("/api/budget/getBudget", variables).then((response) => {
+		axios.post("/api/income/getIncome", variables).then((response) => {
 			if (response.data.success) {
-                setBudget(response.data.budget.templates);
-                calculateIncome(response.data.budget.templates);
-                calculateExpense(response.data.budget.templates);
-                grabChartData(response.data.budget.templates);
+                console.log(response.data)
+                setIncome(response.data.income);
+                calculateIncome(response.data.income);
+                //calculateExpense(response.data.budget.budgets[new Date().getMonth()]);
+                //grabChartData(response.data.budget.budgets[new Date().getMonth()]);
 			} else {
 				console.log("Failed to get budget");
 			}
-		});
+        });
+        
+        axios.post("/api/expense/getExpense", variables).then((response) => {
+			if (response.data.success) {
+                console.log(response)
+                combineExpenseGroupsAndEntries(response.data.groups, response.data.entries);
+                //calculateExpense(response.data.expense);
+                //grabChartData(response.data.budget.budgets[new Date().getMonth()]);
+			} else {
+				console.log("Failed to get budget");
+			}
+        });
     };
     
     const barData = {
@@ -138,12 +184,12 @@ const Budget = () => {
     }
 
     const doughnutData = {
-        labels: [...categoryNames],
+        labels: ["Savings", ...categoryNames],
         datasets: [
             {
                 label: "Monthly Expenses",
                 barThickness: 100,
-                data: [...categoryTotalExpenses],
+                data: [savings, ...categoryTotalExpenses],
                 borderColor: ['rgb(153, 102, 255)', 'rgb(133,187,101)',  
                 '#FF6633', '#E666FF', '#22d0f2', '#FFFF99', '#00B3E6', 
                 '#E6B333', '#3366E6', '#999966', '#99FF99', '#B34D4D',
@@ -179,6 +225,18 @@ const Budget = () => {
 
 	return (
 		<div className="dashboard-container">
+            <div id="calendar">
+                <div id="month-year">
+                    <h2>{allMonths[month]} 2020</h2>
+                </div>
+
+                <div id="months">
+                    {allMonths.map((month,index) => (
+                        <button key={index} className="month-btn" name={month} onClick={() => setMonth(index)}>{month}</button>
+                    ))}
+                </div>
+            </div>
+
 			<div id="chart-data">
                 <div id="doughnut-chart-container">
                     <Doughnut data={doughnutData} options={doughnutOptions} />
@@ -190,7 +248,8 @@ const Budget = () => {
 
 			<Income
 				setIncomeModalDisplay={setIncomeModalDisplay}
-                budget={budget}
+                fetchBudget={fetchBudget}
+                income={income}
                 totalIncome={totalIncome}
                 calculateIncome={calculateIncome}
                 calculateExpense={calculateExpense}
@@ -206,6 +265,8 @@ const Budget = () => {
 			<Expense
 				setExpenseModalDisplay={setExpenseModalDisplay}
                 budget={budget}
+                fetchBudget={fetchBudget}
+                expense={expense}
                 totalExpense={totalExpense}
                 calculateIncome={calculateIncome}
                 calculateExpense={calculateExpense}
@@ -219,16 +280,20 @@ const Budget = () => {
 			/>
 
 			<IncomeModal
-				incomeModalDisplay={incomeModalDisplay}
-				setIncomeModalDisplay={setIncomeModalDisplay}
+                incomeModalDisplay={incomeModalDisplay}
+                variables={variables}
+                setIncomeModalDisplay={setIncomeModalDisplay}
+                fetchBudget={fetchBudget}
                 setBudget={setBudget}
                 calculateIncome={calculateIncome}
                 grabChartData={grabChartData}
 			/>
 			<ExpenseModal
-				expenseModalDisplay={expenseModalDisplay}
+                expenseModalDisplay={expenseModalDisplay}
+                variables={variables}
 				setExpenseModalDisplay={setExpenseModalDisplay}
                 setBudget={setBudget}
+                fetchBudget={fetchBudget}
                 calculateIncome={calculateIncome}
                 grabChartData={grabChartData}
 			/>

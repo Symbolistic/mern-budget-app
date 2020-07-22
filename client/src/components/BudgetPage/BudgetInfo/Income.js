@@ -5,11 +5,9 @@ import DoneIcon from "@material-ui/icons/Done";
 
 function Income({
 	setIncomeModalDisplay,
-    budget,
+	income,
     totalIncome,
-    calculateExpense,
-    calculateIncome,
-	setBudget,
+    fetchBudget,
 	variables,
 	editEntry,
 	currentlyEditing,
@@ -17,18 +15,6 @@ function Income({
 	setEditEntry,
 	grabChartData,
 }) {
-	const fetchBudget = () => {
-		axios.post("/api/budget/getBudget", variables).then((response) => {
-			if (response.data.success) {
-                setBudget(response.data.budget.templates);
-                calculateIncome(response.data.budget.templates);
-				calculateExpense(response.data.budget.templates);
-				grabChartData(response.data.budget.templates);
-			} else {
-				console.log("Failed to get budget");
-			}
-		});
-	};
 
 	const handleIncomeEdit = (event) => {
 		const { name, value } = event.target;
@@ -39,18 +25,16 @@ function Income({
 	};
 
 	const editIncome = (id, name) => {
-		const categoryId = id;
-		const categoryName = name;
-
+		
 		const data = {
 			userId: variables.userFrom,
-			categoryId: categoryId,
-			categoryName: categoryName,
-			editValue: editEntry[categoryName + categoryId],
+			groupID: id,
+			name: name,
+			editValue: editEntry[name + id],
 		};
 		// Checks if the field is empty, if its not, then we will run the function
 		if (data.editValue) {
-			axios.post("/api/budget/editIncome", data).then((response) => {
+			axios.post("/api/income/editIncomeGroup", data).then((response) => {
 				if (response.data.success) {
 					// Sets editing to false so we get rid of the input field and display data again
 					setCurrentlyEditing({ categoryId: false });
@@ -75,18 +59,14 @@ function Income({
 		}
 	};
 
-	const deleteCategory = (event) => {
+	const deleteCategory = (event, id) => {
 		event.preventDefault();
-		const categoryId = event.target.id;
-		const type = event.target.name;
 
 		const data = {
-			userId: variables.userFrom,
-			type: type,
-			categoryId: categoryId,
+			groupID: id,
 		};
 
-		axios.post("/api/budget/deleteCategory", data).then((response) => {
+		axios.post("/api/income/deleteIncomeGroup", data).then((response) => {
 			if (response.data.success) {
 				fetchBudget();
 			} else {
@@ -110,8 +90,8 @@ function Income({
 			</div>
 
 			<div className="data-wrapper">
-				{budget[0]?.incomeCategories.length > 0
-					? budget[0].incomeCategories.map((val, index) => (
+				{income.length > 0
+					? income.map((val, index) => (
 							<div key={index} id="data-container">
 								<div className="data-header">
 									<h4 className="category-header">{val.name}</h4>
@@ -121,7 +101,7 @@ function Income({
 										id={val._id}
 										name="income"
 										className="close"
-										onClick={deleteCategory}
+										onClick={(event) => deleteCategory(event, val._id)}
 									>
 										X
 									</button>

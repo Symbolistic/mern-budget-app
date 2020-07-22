@@ -38,7 +38,7 @@ const RegisterLogin = withRouter(({history}) => {
             .then(response => {
                 if (response.payload.loginSuccess) {
                     window.localStorage.setItem('userId', response.payload.userId);
-                    history.push('/');
+                    history.push('/budget');
                 } else {
                     setErrors(["Login Failed! Check your Email and Password!"]);
                 }

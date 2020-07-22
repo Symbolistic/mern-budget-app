@@ -21,26 +21,6 @@ const userSchema = mongoose.Schema({
         type: Number, 
         default: 0
     },
-    templates: [{
-        name: {type: String, required: true, default: "Basic Template"},
-        incomeCategories: [{
-            name: {type: String, required: true, default: "Job 1"},
-            incomeInfo: {
-                paySchedule: {type: String, required: true, default: "Bi-Weekly"},
-                netIncome: {type: Number, required: true, default: 0},
-                extraIncome: {type: Number, required: true, default: 0},
-                savingsPercent: {type: Number, required: true, default: 0},
-            }
-        }],
-        expenseCategories: [{
-            name: {type: String, required: true},
-            expenseEntries:[{
-                description: {type: String, required: true},
-                amount: {type: Number, required: true},
-            }]
-
-        }]
-    }],
     token: {
         type: String
     },

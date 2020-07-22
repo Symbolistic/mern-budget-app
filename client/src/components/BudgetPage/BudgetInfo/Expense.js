@@ -7,6 +7,8 @@ import AddIcon from "@material-ui/icons/Add";
 function Expense({
 	setExpenseModalDisplay,
 	budget,
+	fetchBudget,
+	expense,
 	totalExpense,
 	calculateIncome,
 	calculateExpense,
@@ -20,18 +22,6 @@ function Expense({
 }) {
 	const [newEntry, setNewEntry] = useState({});
 
-	const fetchBudget = () => {
-		axios.post("/api/budget/getBudget", variables).then((response) => {
-			if (response.data.success) {
-				setBudget(response.data.budget.templates);
-				calculateIncome(response.data.budget.templates);
-				calculateExpense(response.data.budget.templates);
-				grabChartData(response.data.budget.templates);
-			} else {
-				console.log("Failed to get budget");
-			}
-		});
-	};
 
 	// This will handle all the input elements
 	const handleChange = (event) => {
@@ -54,17 +44,15 @@ function Expense({
 		console.log(editEntry);
 	};
 
-	const editExpense = (categoryId, expenseId) => {
+	const editExpense = (expenseEntryID) => {
 		const data = {
-			userId: variables.userFrom,
-			categoryId: categoryId,
-			expenseId: expenseId,
-			editDescription: editEntry[`description${expenseId}`],
-			editAmount: editEntry[`amount${expenseId}`],
+			expenseEntryID: expenseEntryID,
+			editDescription: editEntry[`description${expenseEntryID}`],
+			editAmount: editEntry[`amount${expenseEntryID}`],
 		};
 
 		if (data.editDescription || data.editAmount) {
-			axios.post("/api/budget/editExpense", data).then((response) => {
+			axios.post("/api/expense/editExpenseEntry", data).then((response) => {
 				if (response.data.success) {
 					// Sets editing to false so we get rid of the input field and display data again
 					setCurrentlyEditing({ categoryId: false });
@@ -86,14 +74,12 @@ function Expense({
 		}
 	};
 
-	const deleteExpense = (categoryId, expenseId) => {
+	const deleteExpense = (expenseEntryId) => {
 		const data = {
-			userId: variables.userFrom,
-			categoryId: categoryId,
-			expenseId: expenseId,
+			expenseEntryID: expenseEntryId,
 		};
 
-		axios.post("/api/budget/deleteExpense", data).then((response) => {
+		axios.post("/api/expense/deleteExpenseEntry", data).then((response) => {
 			if (response.data.success) {
 				fetchBudget();
 			} else {
@@ -104,18 +90,14 @@ function Expense({
 
 	// This will add an expense to a specific category
 	const addExpense = (id, name) => {
-		const categoryId = id;
-		const categoryName = name;
 
 		const data = {
-			userId: variables.userFrom,
-			categoryId: categoryId,
-			categoryName: categoryName,
-			description: newEntry[categoryId],
-			price: newEntry[categoryId + "Price"],
+			entryFrom: id,
+			description: newEntry[id],
+			amount: newEntry[id + "Price"],
 		};
 
-		axios.post("/api/budget/addToExpenses", data).then((response) => {
+		axios.post("/api/expense/addExpenseEntry", data).then((response) => {
 			if (response.data.success) {
 				fetchBudget();
 			} else {
@@ -132,14 +114,14 @@ function Expense({
 		const data = {
 			userId: variables.userFrom,
 			type: type,
-			categoryId: categoryId,
+			groupID: categoryId,
 		};
 
-		axios.post("/api/budget/deleteCategory", data).then((response) => {
+		axios.post("/api/expense/deleteExpenseGroup", data).then((response) => {
 			if (response.data.success) {
 				fetchBudget();
 			} else {
-				console.log("Failed to remove to category");
+				console.log("Failed to remove to expense group");
 			}
 		});
 	};
@@ -158,8 +140,8 @@ function Expense({
 			</div>
 
 			<div className="data-wrapper">
-				{budget[0]?.expenseCategories.length > 0
-					? budget[0].expenseCategories.map((category, index) => (
+				{expense.length > 0
+					? expense.map((category, index) => (
 							<div key={index} className="data-container">
 								<div className="data-header">
 									<h4 className="category-header">{category.name}</h4>
@@ -215,7 +197,6 @@ function Expense({
 																		id={expenseEntry._id}
 																		onClick={() =>
 																			editExpense(
-																				category._id,
 																				expenseEntry._id
 																			)
 																		}
@@ -234,7 +215,6 @@ function Expense({
 																<DeleteIcon
 																	onClick={() =>
 																		deleteExpense(
-																			category._id,
 																			expenseEntry._id
 																		)
 																	}

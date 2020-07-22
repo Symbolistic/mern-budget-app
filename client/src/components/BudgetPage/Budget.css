@@ -18,6 +18,28 @@
 	max-width: 100%;
 }
 
+#calendar {
+	height:100%;
+	display: grid;
+	text-align: center;
+}
+
+#month-year {
+	margin-bottom: 20px;
+}
+
+#months {
+	display: grid;
+	grid-template-columns: repeat(6, 1fr);
+	gap: 10px;
+	height:100%;
+	margin: auto;
+}
+
+.month-btn {
+	padding: 5px;
+}
+
 #chart-data {
 	display: grid;
 	grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
