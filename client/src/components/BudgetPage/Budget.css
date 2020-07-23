@@ -51,7 +51,7 @@
 	text-align: center;
 	width: 100%;
 	max-height: 100%;
-
+	box-shadow: .3em 0.5em 1.3em rgba(31,36,38,0.05);
 }
 
 #doughnut-chart-container {
@@ -82,6 +82,7 @@ canvas {
 	margin: 30px 0;
 	border-radius: 0.25rem;
 	padding: 30px;
+	box-shadow: .3em 0.5em 1.3em rgba(31,36,38,0.05);
 }
 
 .header-area {
@@ -127,7 +128,7 @@ canvas {
 	margin-top: 20px;
 }
 
-#data-container {
+.data-container {
 	display: grid;
 	color: #45818e;
 	padding: 20px;
@@ -150,6 +151,7 @@ form {
 	border-radius: 0.25rem;
 	padding: 30px;
 	color: #45818e;
+	box-shadow: .3em 0.5em 1.3em rgba(31,36,38,0.05);
 }
 
 #entries-data {
@@ -198,43 +200,43 @@ form {
 	color: black;
 }
 
-.add-expense {
+.add-entry {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
 }
 
-.expense-description {
+.entry-description {
 	text-align: center;
 	padding-top: 10px;
 	font-weight: bold;
 	padding-right: 7px;
 }
 
-.expense-price {
+.entry-price {
 	text-align: center;
 	padding-top: 10px;
 	color: black;
 }
 
-.add-expense > input {
+.add-entry > input {
 	border: none;
 	border-bottom: 1px solid black;
 	outline: none;
 	padding-bottom: 5px;
 }
 
-.expense-price {
+.entry-price {
 	display: grid;
 	grid-template-columns: 1fr 40px;
 	justify-content: center;
 }
 
-.expense-price > input {
+.entry-price > input {
 	text-align: center;
 	padding-bottom: 5px;
 }
 
-.expense-data {
+.entry-data {
 	border: none;
 	border-bottom: 1px solid black;
 	outline: none;
@@ -251,9 +253,6 @@ table {
 	border-spacing: 0;
 	border-collapse: collapse;
 	table-layout: fixed;
-
-
-
 }
 
 td {

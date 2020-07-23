@@ -4,21 +4,17 @@ import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import DoneIcon from "@material-ui/icons/Done";
 import AddIcon from "@material-ui/icons/Add";
+
 function Expense({
 	setExpenseModalDisplay,
-	budget,
 	fetchBudget,
 	expense,
 	totalExpense,
-	calculateIncome,
-	calculateExpense,
-	setBudget,
 	variables,
 	editEntry,
 	currentlyEditing,
 	setCurrentlyEditing,
 	setEditEntry,
-	grabChartData,
 }) {
 	const [newEntry, setNewEntry] = useState({});
 
@@ -41,7 +37,6 @@ function Expense({
 			[name]: value,
 		});
 
-		console.log(editEntry);
 	};
 
 	const editExpense = (expenseEntryID) => {
@@ -94,7 +89,7 @@ function Expense({
 		const data = {
 			entryFrom: id,
 			description: newEntry[id],
-			amount: newEntry[id + "Price"],
+			budgetedAmount: newEntry[id + "budgetedAmount"],
 		};
 
 		axios.post("/api/expense/addExpenseEntry", data).then((response) => {
@@ -135,7 +130,7 @@ function Expense({
 					name="expenseCategory"
 					onClick={() => setExpenseModalDisplay(true)}
 				>
-					Add Category
+					Add Group
 				</button>
 			</div>
 
@@ -159,6 +154,14 @@ function Expense({
 								<div id="entries-data">
 									<table>
 										<tbody>
+											<tr>
+												<th>Description</th>
+												<th>Budgeted</th>
+                                            	<th>Actual</th>
+												<th></th>
+												<th></th>
+											</tr>
+                                            
 											{category.expenseEntries.map((expenseEntry, index) => (
 														<tr key={index} id="expense-data">
 															<td className="description">
@@ -179,16 +182,31 @@ function Expense({
 															<td className="data">
 																{currentlyEditing[expenseEntry._id] === true ? (
 																	<input
-																		name={`amount${expenseEntry._id}`}
+																		name={`budgetedAmount${expenseEntry._id}`}
 																		onChange={handleExpenseEdit}
 																		value={
-																			editEntry[`amount${expenseEntry._id}`]
-																				? editEntry[`amount${expenseEntry._id}`]
-																				: expenseEntry.amount
+																			editEntry[`budgetedAmount${expenseEntry._id}`]
+																				? editEntry[`budgetedAmount${expenseEntry._id}`]
+																				: expenseEntry.budgetedAmount
 																		}
 																	/>
 																) : (
-																	expenseEntry.amount
+																	expenseEntry.budgetedAmount
+																)}
+															</td>
+															<td className="data">
+																{currentlyEditing[expenseEntry._id] === true ? (
+																	<input
+																		name={`actualAmount${expenseEntry._id}`}
+																		onChange={handleExpenseEdit}
+																		value={
+																			editEntry[`actualAmount${expenseEntry._id}`]
+																				? editEntry[`actualAmount${expenseEntry._id}`]
+																				: expenseEntry.actualAmount
+																		}
+																	/>
+																) : (
+																	expenseEntry.actualAmount
 																)}
 															</td>
 															<td className="expense-icon1">
@@ -226,25 +244,25 @@ function Expense({
 										</tbody>
 									</table>
 
-									<form className="add-expense">
+									<form className="add-entry">
 										{/* The reason I use val._id is because I want to search by id, not name
                             just incase 2 categories have the same name, it will cause bugs. */}
 										<input
-											className="expense-description expense-data"
+											className="entry-description entry-data"
 											type="text"
 											name={category._id}
 											onChange={handleChange}
 											value={newEntry[category.name]}
 											placeholder="Description"
 										/>
-										<div className="expense-price">
+										<div className="entry-price">
 											<input
-												className="expense-data"
+												className="entry-data"
 												type="text"
-												name={category._id + "Price"}
+												name={category._id + "budgetedAmount"}
 												onChange={handleChange}
-												value={newEntry[category.name + "Price"]}
-												placeholder="Amount $$$"
+												value={newEntry[category.name + "budgetedAmount"]}
+												placeholder="Budget Amount"
 											/>
 											<AddIcon
 												className="data-submit"

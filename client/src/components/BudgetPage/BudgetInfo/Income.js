@@ -1,40 +1,50 @@
-import React from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import EditIcon from "@material-ui/icons/Edit";
 import DoneIcon from "@material-ui/icons/Done";
+import DeleteIcon from "@material-ui/icons/Delete";
+import AddIcon from "@material-ui/icons/Add";
 
 function Income({
 	setIncomeModalDisplay,
 	income,
-    totalIncome,
-    fetchBudget,
-	variables,
+	totalIncome,
+	fetchBudget,
 	editEntry,
 	currentlyEditing,
 	setCurrentlyEditing,
 	setEditEntry,
-	grabChartData,
 }) {
+	const [newEntry, setNewEntry] = useState({});
+
+	// This will handle all the input elements
+	const handleChange = (event) => {
+		const { name, value } = event.target;
+
+		setNewEntry({
+			...newEntry,
+			[name]: value,
+		});
+	};
 
 	const handleIncomeEdit = (event) => {
 		const { name, value } = event.target;
 
 		setEditEntry({
+			...editEntry,
 			[name]: value,
 		});
 	};
 
-	const editIncome = (id, name) => {
-		
+	const editIncomeEntry = (id) => {
 		const data = {
-			userId: variables.userFrom,
-			groupID: id,
-			name: name,
-			editValue: editEntry[name + id],
+			incomeEntryID: id,
+			editDescription: editEntry[`description${id}`],
+			editAmount: editEntry[`amount${id}`],
 		};
-		// Checks if the field is empty, if its not, then we will run the function
-		if (data.editValue) {
-			axios.post("/api/income/editIncomeGroup", data).then((response) => {
+
+		if (data.editDescription || data.editAmount) {
+			axios.post("/api/income/editIncomeEntry", data).then((response) => {
 				if (response.data.success) {
 					// Sets editing to false so we get rid of the input field and display data again
 					setCurrentlyEditing({ categoryId: false });
@@ -45,16 +55,13 @@ function Income({
 					// Update the render
 					fetchBudget();
 				} else {
-					console.log("Failed to edit income information");
+					console.log("Failed to edit income entry");
 					setCurrentlyEditing({ categoryId: false });
 					setEditEntry({});
 				}
 			});
 		} else {
-			// Sets editing to false so we get rid of the input field and display data again
 			setCurrentlyEditing({ categoryId: false });
-
-			// Clear the editing input field
 			setEditEntry({});
 		}
 	};
@@ -73,11 +80,41 @@ function Income({
 				console.log("Failed to remove to category");
 			}
 		});
-    };
+	};
+
+	const deleteIncomeEntry = (id) => {
+		const data = {
+			incomeEntryID: id,
+		};
+
+		axios.post("/api/income/deleteIncomeEntry", data).then((response) => {
+			if (response.data.success) {
+				fetchBudget();
+			} else {
+				console.log("Failed to delete to expense");
+			}
+		});
+	};
+
+	// This will add an expense to a specific category
+	const addIncomeEntry = (id) => {
+		const data = {
+			entryFrom: id,
+			description: newEntry[id],
+			amount: newEntry[id + "Price"],
+		};
+
+		axios.post("/api/income/addIncomeEntry", data).then((response) => {
+			if (response.data.success) {
+				fetchBudget();
+			} else {
+				console.log("Failed to add to expenses");
+			}
+		});
+	};
 
 	return (
 		<div id="income-container">
-
 			<div className="header-area">
 				<h2 className="budget-income-title">Total Income: ${totalIncome}</h2>
 				<button
@@ -85,177 +122,126 @@ function Income({
 					name="incomeCategory"
 					onClick={() => setIncomeModalDisplay(true)}
 				>
-					Add Category
+					Add Group
 				</button>
 			</div>
 
 			<div className="data-wrapper">
 				{income.length > 0
-					? income.map((val, index) => (
-							<div key={index} id="data-container">
+					? income.map((group, index) => (
+							<div key={index} className="data-container">
 								<div className="data-header">
-									<h4 className="category-header">{val.name}</h4>
+									<h4 className="category-header">{group.name}</h4>
 									{/* Here I put the ID is so I can pass it to the onClick
                                 this way I can target the correct category by ID instead of name */}
 									<button
-										id={val._id}
+										id={group._id}
 										name="income"
 										className="close"
-										onClick={(event) => deleteCategory(event, val._id)}
+										onClick={(event) => deleteCategory(event, group._id)}
 									>
 										X
 									</button>
 								</div>
+								<div id="entries-data">
+									<table>
+										<tbody>
+											<tr>
+												<th>Description</th>
+												<th>Amount</th>
+												<th></th>
+												<th></th>
+											</tr>
+											
+											{group.incomeEntries.map((incomeEntry, index) => (
+												<tr key={index} id="expense-data">
+													<td className="description">
+														{currentlyEditing[incomeEntry._id] === true ? (
+															<input
+																name={`description${incomeEntry._id}`}
+																onChange={handleIncomeEdit}
+																value={
+																	editEntry[`description${incomeEntry._id}`]
+																		? editEntry[`description${incomeEntry._id}`]
+																		: incomeEntry.description
+																}
+															/>
+														) : (
+															incomeEntry.description
+														)}
+													</td>
+													<td className="data">
+														{currentlyEditing[incomeEntry._id] === true ? (
+															<input
+																name={`amount${incomeEntry._id}`}
+																onChange={handleIncomeEdit}
+																value={
+																	editEntry[`amount${incomeEntry._id}`]
+																		? editEntry[`amount${incomeEntry._id}`]
+																		: incomeEntry.amount
+																}
+															/>
+														) : (
+															incomeEntry.amount
+														)}
+													</td>
+													<td className="income-icon1">
+														{currentlyEditing[incomeEntry._id] === true ? (
+															<DoneIcon
+																id={incomeEntry._id}
+																onClick={() => editIncomeEntry(incomeEntry._id)}
+															/>
+														) : (
+															<EditIcon
+																onClick={() =>
+																	setCurrentlyEditing({
+																		[incomeEntry._id]: true,
+																	})
+																}
+															/>
+														)}
+													</td>
+													<td className="income-icon2">
+														<DeleteIcon
+															onClick={() => deleteIncomeEntry(incomeEntry._id)}
+														/>
+													</td>
+												</tr>
+											))}
+										</tbody>
+									</table>
 
-								<table id="income-data">
-									<tbody>
-										<tr>
-											{/* I use ID: RowName (PaySchedule) so I can tell the code to target
-                                        this specific category (using the ID) and target this specific row (using its name)*/}
-											<td className="description">Pay Schedule:</td>
-											<td className="data">
-												{currentlyEditing[val._id] === "paySchedule" ? (
-													<select
-														name={`paySchedule${val._id}`}
-														value={
-															editEntry[`paySchedule${val._id}`]
-																? editEntry[`paySchedule${val._id}`]
-																: val.incomeInfo.paySchedule
-														}
-														onChange={handleIncomeEdit}
-													>
-														<option value="Weekly">Weekly</option>
-														<option value="Bi-Weekly">Bi-Weekly</option>
-														<option value="Monthly">Monthly</option>
-													</select>
-												) : (
-													val.incomeInfo.paySchedule
-												)}
-											</td>
-											<td>
-												{currentlyEditing[val._id] === "paySchedule" ? (
-													<DoneIcon
-														id={val._id}
-														name="paySchedule"
-														onClick={() => editIncome(val._id, "paySchedule")}
-													/>
-												) : (
-													<EditIcon
-														onClick={() =>
-															setCurrentlyEditing({ [val._id]: "paySchedule" })
-														}
-													/>
-												)}
-											</td>
-										</tr>
-
-										<tr>
-											<td className="description">Net Income:</td>
-											<td className="data">
-												{currentlyEditing[val._id] === "netIncome" ? (
-													<input
-														name={`netIncome${val._id}`}
-														onChange={handleIncomeEdit}
-														value={
-															editEntry[`netIncome${val._id}`]
-																? editEntry[`netIncome${val._id}`]
-																: val.incomeInfo.netIncome
-														}
-													/>
-												) : (
-													val.incomeInfo.netIncome
-												)}
-											</td>
-											<td>
-												{currentlyEditing[val._id] === "netIncome" ? (
-													<DoneIcon
-														id={val._id}
-														name="netIncome"
-														onClick={() => editIncome(val._id, "netIncome")}
-													/>
-												) : (
-													<EditIcon
-														onClick={() =>
-															setCurrentlyEditing({ [val._id]: "netIncome" })
-														}
-													/>
-												)}
-											</td>
-										</tr>
-
-										<tr>
-											<td className="description">Extra Income:</td>
-											<td className="data">
-												{currentlyEditing[val._id] === "extraIncome" ? (
-													<input
-														name={`extraIncome${val._id}`}
-														onChange={handleIncomeEdit}
-														value={
-															editEntry[`extraIncome${val._id}`]
-																? editEntry[`extraIncome${val._id}`]
-																: val.incomeInfo.extraIncome
-														}
-													/>
-												) : (
-													val.incomeInfo.extraIncome
-												)}
-											</td>
-											<td>
-												{currentlyEditing[val._id] === "extraIncome" ? (
-													<DoneIcon
-														id={val._id}
-														name="extraIncome"
-														onClick={() => editIncome(val._id, "extraIncome")}
-													/>
-												) : (
-													<EditIcon
-														onClick={() =>
-															setCurrentlyEditing({ [val._id]: "extraIncome" })
-														}
-													/>
-												)}
-											</td>
-										</tr>
-
-										<tr>
-											<td className="description">Savings Percent:</td>
-											<td className="data">
-												{currentlyEditing[val._id] === "savingsPercent" ? (
-													<input
-														name={`savingsPercent${val._id}`}
-														onChange={handleIncomeEdit}
-														value={
-															editEntry[`savingsPercent${val._id}`]
-																? editEntry[`savingsPercent${val._id}`]
-																: val.incomeInfo.savingsPercent
-														}
-													/>
-												) : (
-													val.incomeInfo.savingsPercent
-												)}
-											</td>
-											<td>
-												{currentlyEditing[val._id] === "savingsPercent" ? (
-													<DoneIcon
-														id={val._id}
-														name="savingsPercent"
-														onClick={() =>
-															editIncome(val._id, "savingsPercent")
-														}
-													/>
-												) : (
-													<EditIcon
-														onClick={() =>
-															setCurrentlyEditing({
-																[val._id]: "savingsPercent",
-															})
-														}
-													/>
-												)}
-											</td>
-										</tr>
-									</tbody>
-								</table>
+									<form className="add-entry">
+										{/* The reason I use val._id is because I want to search by id, not name
+                            just incase 2 categories have the same name, it will cause bugs. */}
+										<input
+											className="entry-description entry-data"
+											type="text"
+											name={group._id}
+											onChange={handleChange}
+											value={newEntry[group.name]}
+											placeholder="Description"
+										/>
+										<div className="entry-price">
+											<input
+												className="entry-data"
+												type="text"
+												name={group._id + "Price"}
+												onChange={handleChange}
+												value={newEntry[group.name + "Price"]}
+												placeholder="Amount $$$"
+											/>
+											<AddIcon
+												className="data-submit"
+												id={group._id}
+												type="submit"
+												name={group.name}
+												value="+"
+												onClick={() => addIncomeEntry(group._id, group.name)}
+											/>
+										</div>
+									</form>
+								</div>
 							</div>
 					  ))
 					: ""}

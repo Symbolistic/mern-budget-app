@@ -32,17 +32,6 @@ router.post("/getExpense", auth, (req, res) => {
 	});
 });
 
-router.post("/getExpenseEntries", auth, (req, res) => {
-	// Grab logged in users expense ENTRIES data for each group/category of expenses
-	ExpenseEntry.find({ entryFrom: { $in: req.body.entryFrom } }).exec(
-		(err, expense) => {
-			console.log(expense);
-			if (err) return res.status(400).send({ success: false, err });
-			res.status(200).json({ success: true, expense });
-		}
-	);
-});
-
 router.post("/addExpenseGroup", auth, (req, res) => {
 	const { userFrom, budgetType, month, year, groupName } = req.body;
 
@@ -62,12 +51,13 @@ router.post("/addExpenseGroup", auth, (req, res) => {
 });
 
 router.post("/addExpenseEntry", auth, (req, res) => {
-	const { entryFrom, description, amount } = req.body;
+	const { entryFrom, description, budgetedAmount } = req.body;
 
 	const entry = new ExpenseEntry({
 		entryFrom: entryFrom,
 		description: description,
-		amount: amount,
+		budgetedAmount: budgetedAmount,
+		actualAmount: 0
 	});
 
 	entry.save((err) => {
@@ -93,11 +83,12 @@ router.post("/deleteExpenseEntry", auth, (req, res) => {
 });
 
 router.post("/editExpenseEntry", auth, (req, res) => {
-	const { expenseEntryID, editDescription, editAmount } = req.body;
+	const { expenseEntryID, editDescription, editBudgetedAmount, editActualAmount } = req.body;
 
 	let params = {
         description: editDescription,
-        amount: editAmount
+		budgetedAmount: editBudgetedAmount,
+		actualAmount: editActualAmount
 	};
 
     /* Find any null/undefined values and delete them so they wont get passed into the database and

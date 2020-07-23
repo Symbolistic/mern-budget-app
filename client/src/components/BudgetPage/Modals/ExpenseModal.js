@@ -47,12 +47,12 @@ function ExpenseModal(props) {
 	return (
 		<div className={props.expenseModalDisplay ? "modal" : "modal hide"}>
 			<div className="modal-header">
-				<h3>Add Expense Category</h3>
+				<h3>Add Expense Group</h3>
 			</div>
 			<div className="modal-body">
 				<form>
 					<label>
-						Category Name:
+						Group Name:
 						<input
 							type="text"
 							name="groupName"
