@@ -6,9 +6,6 @@ const cookieParser = require("cookie-parser");
 
 const config = require("./config/key");
 
-const { User } = require("./models/User");
-const { auth } = require("./middleware/auth");
-
 mongoose.connect(config.mongoURI,
                  { useNewUrlParser:true, useUnifiedTopology: true, useCreateIndex: true }).then(() => console.log("Connected to Database"))
                                                                     .catch(err => console.log(err));
