@@ -1,29 +1,16 @@
 const express = require("express");
 const router = express.Router();
-const { User } = require("../models/User");
 const { SavingsGroup } = require("../models/SavingsGroup");
-const { auth } = require("../middleware/auth");
-const { json } = require("body-parser");
+const passport = require("passport");
 
 //=================================
-//             Income
+//             Savings
 //=================================
 
-
-// router.post("/getIncome", auth, (req, res) => {
-//     const { userFrom, month, year } = req.body;
-
-// 	// Grab logged in users income data
-// 	IncomeGroup.find({ userFrom: userFrom, month: month, year: year }).exec((err, income) => {
-// 		if (err) return res.status(400).send({ success: false, err });
-// 		res.status(200).json({ success: true, income });
-// 	});
-// });
-
-router.post("/getSavings", auth, (req, res) => {
+router.post("/getSavings", passport.authenticate("jwt", {session: false}), (req, res) => {
     const { userFrom, month, year } = req.body;
 
-	// Grab logged in users income data
+	// Grab logged in users savings data
 	SavingsGroup.find({ userFrom: userFrom, month: month, year: year }).exec((err, groups) => {
         if (err) return res.status(400).send({ success: false, err });
         res.json({ success: true, groups: groups, entries: groups });
@@ -31,7 +18,7 @@ router.post("/getSavings", auth, (req, res) => {
 });
 
 
-router.post("/addSavingsGroup", auth, (req, res) => {
+router.post("/addSavingsGroup", passport.authenticate("jwt", {session: false}), (req, res) => {
 	const {
 		userFrom,
 		budgetType,
@@ -62,7 +49,7 @@ router.post("/addSavingsGroup", auth, (req, res) => {
 });
 
 
-router.post("/editSavings", auth, (req, res) => {
+router.post("/editSavings", passport.authenticate("jwt", {session: false}), (req, res) => {
 	const { groupID, budgetedAmount, actualAmount } = req.body;
 
 	let params = {
@@ -84,7 +71,7 @@ router.post("/editSavings", auth, (req, res) => {
     });
 });
 
-router.post("/deleteSavingsGroup", auth, (req, res) => {
+router.post("/deleteSavingsGroup", passport.authenticate("jwt", {session: false}), (req, res) => {
 	SavingsGroup.findByIdAndDelete({ _id: req.body.groupID}).exec((err,doc) => {
         if (err) return res.json({ success: false, err });
 		return res.status(200).json({ success: true });

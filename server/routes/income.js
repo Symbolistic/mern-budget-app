@@ -1,29 +1,16 @@
 const express = require("express");
 const router = express.Router();
-const { User } = require("../models/User");
 const { IncomeGroup } = require("../models/IncomeGroup");
 const { IncomeEntry } = require("../models/IncomeEntry");
-const { auth } = require("../middleware/auth");
-const { json } = require("body-parser");
+const passport = require("passport");
 
 //=================================
 //             Income
 //=================================
 
-
-// router.post("/getIncome", auth, (req, res) => {
-//     const { userFrom, month, year } = req.body;
-
-// 	// Grab logged in users income data
-// 	IncomeGroup.find({ userFrom: userFrom, month: month, year: year }).exec((err, income) => {
-// 		if (err) return res.status(400).send({ success: false, err });
-// 		res.status(200).json({ success: true, income });
-// 	});
-// });
-
-router.post("/getIncome", auth, (req, res) => {
-    const { userFrom, month, year } = req.body;
-
+router.post("/getIncome", passport.authenticate("jwt", {session: false}), (req, res) => {
+	const { userFrom, month, year } = req.body;
+	
 	// Grab logged in users income data
 	IncomeGroup.find({ userFrom: userFrom, month: month, year: year }).exec((err, groups) => {
 		if (err) return res.status(400).send({ success: false, err });
@@ -43,7 +30,7 @@ router.post("/getIncome", auth, (req, res) => {
 });
 
 
-router.post("/addIncomeGroup", auth, (req, res) => {
+router.post("/addIncomeGroup", passport.authenticate("jwt", {session: false}), (req, res) => {
 	const {
 		userFrom,
 		budgetType,
@@ -68,7 +55,7 @@ router.post("/addIncomeGroup", auth, (req, res) => {
 	});
 });
 
-router.post("/addIncomeEntry", auth, (req, res) => {
+router.post("/addIncomeEntry", passport.authenticate("jwt", {session: false}), (req, res) => {
 	const { entryFrom, description, amount } = req.body;
 
 	const entry = new IncomeEntry({
@@ -83,24 +70,7 @@ router.post("/addIncomeEntry", auth, (req, res) => {
 	});
 });
 
-// router.post("/editIncomeGroup", auth, (req, res) => {
-// 	const { groupID, editValue, name } = req.body;
-
-// 	IncomeGroup.findById({ _id: groupID }, (err, doc) => {
-//         if (err) return res.json({ success: false, err });
-
-//         // Edit that index
-// 		doc.incomeInfo[name] = editValue;
-        
-//         //After edit, save everything in the database
-// 		doc.save((err) => {
-// 			if (err) return res.json({ success: false, err });
-// 			return res.status(200).json({ success: true });
-// 		});
-//     });
-// });
-
-router.post("/editIncomeEntry", auth, (req, res) => {
+router.post("/editIncomeEntry", passport.authenticate("jwt", {session: false}), (req, res) => {
 	const { incomeEntryID, editDescription, editAmount } = req.body;
 
 	let params = {
@@ -119,14 +89,14 @@ router.post("/editIncomeEntry", auth, (req, res) => {
     });
 });
 
-router.post("/deleteIncomeGroup", auth, (req, res) => {
+router.post("/deleteIncomeGroup", passport.authenticate("jwt", {session: false}), (req, res) => {
 	IncomeGroup.findByIdAndDelete({ _id: req.body.groupID}).exec((err,doc) => {
         if (err) return res.json({ success: false, err });
 		return res.status(200).json({ success: true });
     });
 });
 
-router.post("/deleteIncomeEntry", auth, (req, res) => {
+router.post("/deleteIncomeEntry", passport.authenticate("jwt", {session: false}), (req, res) => {
 	IncomeEntry.findByIdAndDelete({ _id: req.body.incomeEntryID }).exec(
 		(err, doc) => {
 			if (err) return res.json({ success: false, err });

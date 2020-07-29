@@ -15,7 +15,7 @@ mongoose.connect(config.mongoURI,
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
-
+app.use(express.json());
 
 app.use('/api/users', require('./routes/users'));
 //app.use('/api/budget', require('./routes/budget'));

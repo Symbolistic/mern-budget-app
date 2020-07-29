@@ -1,207 +1,100 @@
-import React, { useState } from 'react';
-import { useDispatch } from "react-redux";
-import { registerUser } from "../../actions/user_actions";
-import { withRouter } from 'react-router-dom';
+import React, { useState, useRef, useEffect } from "react";
+import AuthService from "../Services/AuthService";
+import Message from "../Message";
+import "./RegisterLogin.css";
 
-const Register = withRouter(({history}) => {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [passwordConfirmation, setPasswordConfirmation] = useState('');
-    const [email, setEmail] = useState('');
-    const [errors, setErrors] = useState([]);
+const Register = (props) => {
+	const [user, setUser] = useState({ username: "", password: "", role: "" });
+	const [message, setMessage] = useState(null);
+	let timerID = useRef(null);
 
+	useEffect(() => {
+		return () => {
+			clearTimeout(timerID);
+		};
+	}, []);
 
-    // Setup Redux useDispatch to replace normal dispatch, this is so we can work with React Hooks
-    const dispatch = useDispatch();
+	const onChange = (event) => {
+		setUser({ ...user, [event.target.name]: event.target.value });
+	};
 
+	const resetForm = () => {
+		setUser({ name: "", email: "", password: "", role: "" });
+	};
 
-    // This will display errors
-    const displayErrors = currentErrors => 
-    currentErrors.map((error, i) => <p key={i+Math.random()}>{error}</p>);
+	const onSubmit = (event) => {
+		event.preventDefault();
+		AuthService.register(user).then((data) => {
+			const { message } = data;
+			setMessage(message);
+			resetForm();
+			if (!message.msgError) {
+				timerID = setTimeout(() => {
+					props.history.push("/login");
+				}, 2000);
+			}
+		});
+	};
 
-    // Checks to make sure all fields are filled in
-    const isFormValid = () => {
-        let errors = [];
-        let error;
+	return (
+		<div className="register-login-page">
+			<form className="form" onSubmit={onSubmit}>
+				<h3>Please Register</h3>
+				<label htmlFor="name">
+					Name:{" "}
+				</label>
+				<input
+					type="text"
+					name="name"
+					onChange={onChange}
+					className="form-control"
+					placeholder="Enter your name"
+					value={user.name}
+				/>
 
-        if (isFormEmpty(username, email, password, passwordConfirmation)) {
-            error = { message: "Fill in all fields" };
-            setErrors(errors.concat(error));
-        } else if (!isPasswordValid(password, passwordConfirmation)) {
-            error = {message: "Password invalid or does not match"};
-            setErrors(errors.concat(error));
-        } else {
-            return true;
-        }
-    }
+				<label htmlFor="email">
+					Email:{" "}
+				</label>
+				<input
+					type="text"
+					name="email"
+					onChange={onChange}
+					className="form-control"
+					placeholder="Enter your email"
+					value={user.email}
+				/>
 
-    // Here we take in the password/passwordConfirmation parameters and compare to make sure they match
-    const isPasswordValid = (password, passwordConfirmation) => {
-        if (password.length < 6 || passwordConfirmation.length < 6) {
-            return false;
-        } else if (password !== passwordConfirmation) {
-            return false;
-        } else {
-            return true;
-        }
+				<label htmlFor="password" className="sr-only">
+					Password:
+				</label>
+				<input
+					type="password"
+					name="password"
+					onChange={onChange}
+					className="form-control"
+					placeholder="Enter Password"
+					value={user.password}
+				/>
 
-    }
+				<label htmlFor="role" className="sr-only">
+					Role:
+				</label>
+				<input
+					type="text"
+					name="role"
+					onChange={onChange}
+					className="form-control"
+					placeholder="Enter Role (admin/user)"
+					value={user.role}
+				/>
 
-    const isFormEmpty = (username, email, password, passwordConfirmation) => {
-        // This will return false if any of the lengths are 0, meaning they haven't been filled in.
-        return (
-            !username.length ||
-            !email.length ||
-            !password.length ||
-            !passwordConfirmation.length
-        );
-    }
-
-
-    const submitForm = event => {
-        event.preventDefault();
-
-        let dataToSubmit = {
-            email: email,
-            username: username,
-            password: password,
-            passwordConfirmation: passwordConfirmation
-        }
-
-        if (isFormValid()) {
-            setErrors([]);
-
-            // Using Redux here
-            dispatch(registerUser(dataToSubmit))
-                .then(response => {
-                    if (response.payload.success) {
-                        history.push('/login');
-                    } else {
-                        setErrors(["Your attempt to register failed, check your info"]);
-                    }
-                })
-                .catch(err => {
-                    setErrors(errors.concat(err));
-                })
-        } else {
-            setErrors(["Your attempt to register failed, check your info"]);
-            console.error("This form is not valid, check your info");
-        }
-    }
-
-    return (
-        <div className="container">
-            <h2>Register</h2>
-
-            <div className="row">
-                <form className="col s12" onSubmit={submitForm}>
-
-                <div className="row">
-                    <div className="input-field col s12">
-                        <input 
-                            name="username"
-                            value={username}
-                            onChange={e => setUsername(e.target.value)}
-                            id="username"
-                            type="text"
-                            className="validate"
-                        />
-
-                        <label className="active" htmlFor="email">Username</label>
-                        <span
-                            className="helper-text"
-                            data-error="Wrong"
-                            data-success="Good!"
-                        /> 
-                    </div>
-                </div>
-
-                <div className="row">
-                        <div className="input-field col s12">
-                            <input 
-                            name="email"
-                            value={email}
-                            onChange={e => setEmail(e.target.value)}
-                            id="email"
-                            type="email"
-                            className="validate"
-                        />
-
-                        <label className="active" htmlFor="email">Email</label>
-                        <span
-                            className="helper-text"
-                            data-error="Please enter a valid email"
-                            data-success="Good!"
-                        />    
-                    </div>
-                </div>
-
-                <div className="row">
-                    <div className="input-field col s12">
-                        <input 
-                            name="password"
-                            value={password}
-                            onChange={e => setPassword(e.target.value)}
-                            id="password"
-                            type="password"
-                            className="validate"
-                        />
-
-                        <label className="active" htmlFor="email">Password</label>
-                        <span
-                            className="helper-text"
-                            data-error="Wrong"
-                            data-success="Good!"
-                        /> 
-                    </div>
-                </div>
-
-                <div className="row">
-                    <div className="input-field col s12">
-                        <input 
-                            name="passwordConfirmation"
-                            value={passwordConfirmation}
-                            onChange={e => setPasswordConfirmation(e.target.value)}
-                            id="passwordConfirmation"
-                            type="password"
-                            className="validate"
-                        />
-
-                        <label className="active" htmlFor="passwordConfirmation">Password Confirmation</label>
-                        <span
-                            className="helper-text"
-                            data-error="Wrong"
-                            data-success="Good!"
-                        /> 
-                    </div>
-                </div>
-
-
-                {errors.length > 0 && (
-                    <div>
-                        {displayErrors(errors)}
-                    </div>
-                )}
-
-
-                <div className="row">
-                    <div className="col 12">
-                        <button
-                            className="btn waves-effect purple lighten-1"
-                            type="submit"
-                            name="action"
-                            onClick={submitForm}
-                            >
-                                Create an account
-                        </button>
-                    </div>
-
-                </div>      
-            </form>
-        </div>
-    </div>
-
-    );
-});
+				<button className="btn btn-lg btn-primary btn-block" type="submit">
+					Register
+				</button>
+			</form>
+			{message ? <Message message={message} /> : null}
+		</div>
+	);
+};
 
 export default Register;

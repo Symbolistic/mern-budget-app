@@ -4,18 +4,34 @@
     box-sizing: border-box;
 }
 
+a {
+    text-decoration: none;
+    color: #ffffff;
+}
+
+.logout-btn {
+    outline: none;
+    background: none;
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    font-size: 16px;
+    margin-right: 10px;
+}
+
 .nav-container {
     margin: 0 auto;
-    
-}
-
-.nav {
     background: rgb(170,70,185);
 background: linear-gradient(90deg, rgba(170,70,185,1) 0%, rgba(138,28,163,1) 49%, rgba(92,12,203,1) 100%);
-    max-width: 100%;
+    max-width: 100%; 
+    display: grid;
+    grid-template-columns: 1fr 1fr; 
+    color: #ffffff;
+    justify-content: space-between;
 }
 
-.nav > h2 {
+.app-name > h2 {
     text-align: left;
     color: #ffffff;
     font-size: 28px;
@@ -24,4 +40,15 @@ background: linear-gradient(90deg, rgba(170,70,185,1) 0%, rgba(138,28,163,1) 49%
     padding-top: 15px;
     vertical-align: middle;
     letter-spacing: 0.1em;
+}
+
+.navbar-links {
+    display: flex;
+    justify-content: flex-end;
+    list-style-type: none;
+}
+
+.navbar-links li {
+    padding: 10px;
+    margin: 10px;
 }

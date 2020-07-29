@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import "./Budget.css";
 import axios from "axios";
+import { AuthContext } from "../Context/AuthContext"; // To get the global states (user data)
 import IncomeModal from "./Modals/IncomeModal";
 import ExpenseModal from "./Modals/ExpenseModal";
 import SavingsModal from "./Modals/SavingsModal";
@@ -42,12 +43,16 @@ const Budget = () => {
     const [categoryNames, setCategoryNames] = useState([]);
     const [categoryTotalExpenses, setCategoryTotalExpenses] = useState([]);
 
+
     // This is to check which user is currently logged in
+    const authContext = useContext(AuthContext);
+
 	const variables = { 
-        userFrom: localStorage.getItem("userId"),
+        userFrom: authContext.user.userFrom,
         month: month,
         year: year
     };
+
 
 	useEffect(() => {
 		fetchBudget();
@@ -100,7 +105,7 @@ const Budget = () => {
 
         entries.map(entry => {
             const index = expenseGroups.findIndex(group => group._id === entry.entryFrom);
-            expenseGroups[index].expenseEntries.push(entry);
+            return expenseGroups[index].expenseEntries.push(entry);
         })
 
         setExpense(expenseGroups);
@@ -116,7 +121,7 @@ const Budget = () => {
 
         entries.map(entry => {
             const index = incomeGroups.findIndex(group => group._id === entry.entryFrom);
-            incomeGroups[index].incomeEntries.push(entry);
+            return incomeGroups[index].incomeEntries.push(entry);
         })
 
         setIncome(incomeGroups);

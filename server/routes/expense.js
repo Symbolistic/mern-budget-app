@@ -1,19 +1,17 @@
 const express = require("express");
 const router = express.Router();
 const { User } = require("../models/User");
-const { IncomeGroup } = require("../models/IncomeGroup");
 const { ExpenseGroup } = require("../models/ExpenseGroup");
 const { ExpenseEntry } = require("../models/ExpenseEntry");
-const { auth } = require("../middleware/auth");
-const { json } = require("body-parser");
+const passport = require("passport");
 
 //=================================
 //             Expense
 //=================================
 
-router.post("/getExpense", auth, (req, res) => {
-    const { userFrom, month, year } = req.body;
-
+router.post("/getExpense", passport.authenticate("jwt", {session: false}), (req, res) => {
+	const { userFrom, month, year } = req.body;
+	
 	// Grab logged in users expense data
 	ExpenseGroup.find({ userFrom: userFrom, month: month, year: year }).exec((err, groups) => {
 		if (err) return res.status(400).send({ success: false, err });
@@ -32,7 +30,7 @@ router.post("/getExpense", auth, (req, res) => {
 	});
 });
 
-router.post("/addExpenseGroup", auth, (req, res) => {
+router.post("/addExpenseGroup", passport.authenticate("jwt", {session: false}), (req, res) => {
 	const { userFrom, budgetType, month, year, groupName } = req.body;
 
 	const expense = new ExpenseGroup({
@@ -50,7 +48,7 @@ router.post("/addExpenseGroup", auth, (req, res) => {
 	});
 });
 
-router.post("/addExpenseEntry", auth, (req, res) => {
+router.post("/addExpenseEntry", passport.authenticate("jwt", {session: false}), (req, res) => {
 	const { entryFrom, description, budgetedAmount } = req.body;
 
 	const entry = new ExpenseEntry({
@@ -66,14 +64,14 @@ router.post("/addExpenseEntry", auth, (req, res) => {
 	});
 });
 
-router.post("/deleteExpenseGroup", auth, (req, res) => {
+router.post("/deleteExpenseGroup", passport.authenticate("jwt", {session: false}), (req, res) => {
 	ExpenseGroup.findByIdAndDelete({ _id: req.body.groupID }).exec((err, doc) => {
 		if (err) return res.json({ success: false, err });
 		return res.status(200).json({ success: true });
 	});
 });
 
-router.post("/deleteExpenseEntry", auth, (req, res) => {
+router.post("/deleteExpenseEntry", passport.authenticate("jwt", {session: false}), (req, res) => {
 	ExpenseEntry.findByIdAndDelete({ _id: req.body.expenseEntryID }).exec(
 		(err, doc) => {
 			if (err) return res.json({ success: false, err });
@@ -82,7 +80,7 @@ router.post("/deleteExpenseEntry", auth, (req, res) => {
 	);
 });
 
-router.post("/editExpenseEntry", auth, (req, res) => {
+router.post("/editExpenseEntry", passport.authenticate("jwt", {session: false}), (req, res) => {
 	const { expenseEntryID, editDescription, editBudgetedAmount, editActualAmount } = req.body;
 
 	let params = {
