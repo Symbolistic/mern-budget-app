@@ -40,6 +40,7 @@ const Login = (props) => {
 					name="username"
 					onChange={onChange}
 					placeholder="Enter Email"
+					required
 				/>
 
 				<label htmlFor="password">
@@ -50,6 +51,7 @@ const Login = (props) => {
 					name="password"
 					onChange={onChange}
 					placeholder="Enter Password"
+					required
 				/>
 
 				<button className="btn btn-lg btn-primary btn-block" type="submit">

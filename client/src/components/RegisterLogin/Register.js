@@ -49,6 +49,7 @@ const Register = (props) => {
 					onChange={onChange}
 					className="form-control"
 					placeholder="Enter your name"
+					required
 					value={user.name}
 				/>
 
@@ -61,6 +62,7 @@ const Register = (props) => {
 					onChange={onChange}
 					className="form-control"
 					placeholder="Enter your email"
+					required
 					value={user.email}
 				/>
 
@@ -73,6 +75,7 @@ const Register = (props) => {
 					onChange={onChange}
 					className="form-control"
 					placeholder="Enter Password"
+					required
 					value={user.password}
 				/>
 

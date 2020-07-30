@@ -32,6 +32,9 @@ passport.use(new JWTStrategy({
 
 // Authenicated Local Strategy using username and password (Basically used when we login)
 passport.use(new LocalStrategy((email, password, done) => {
+    if (!email || !password) {
+        return done(null, false);
+    }
 
     User.findOne({ email: email.toLowerCase() }, (err, user) => {
         // Something went wrong with database
