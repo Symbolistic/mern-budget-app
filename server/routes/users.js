@@ -29,7 +29,7 @@ router.post("/register", (req, res) => {
             return res.status(400).json({ message: {msgBody: "Email is already in use", msgError: true} });
 
         else {
-            const newUser = new User({name, email, password, role: "user"});
+            const newUser = new User({name, email: email.toLowerCase(), password, role: "user"});
             newUser.save(err => {
                 if(err)
                     return res.status(500).json({ message: {msgBody: "Error has occured", msgError: true} });
