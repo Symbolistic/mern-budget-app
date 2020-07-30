@@ -5,9 +5,9 @@ import PrivateRoute from "./hocs/PrivateRoute";
 import UnPrivateRoute from "./hocs/UnPrivateRoute";
 import NavBar from "./NavBar/NavBar";
 import About from "./about";
-import Login from "./RegisterLogin/Login";
-import Register from "./RegisterLogin/Register";
 import Home from "./Home/Home";
+import Register from "./RegisterLogin/Register";
+import Login from "./RegisterLogin/Login";
 import Budget from "./BudgetPage/Budget";
 
 
