@@ -3,9 +3,7 @@ const router = express.Router();
 const passport = require("passport");
 const JWT = require("jsonwebtoken");
 const { User } = require("../models/User");
-const passportConfig = require("../middleware/passport");
-
-const { auth } = require("../middleware/auth");
+const passportConfig = require("../middleware/passport"); // This is needed for the middleware
 
 //=================================
 //             User
@@ -20,7 +18,7 @@ const signToken = userID => {
 }
 
 router.post("/register", (req, res) => {
-    const { name, email, password, role } = req.body;
+    const { name, email, password } = req.body;
     User.findOne({ email }, (err, document) => {
         if (err){
             return res.status(500).json({ message: {msgBody: "Error has occured", msgError: true} });
@@ -31,7 +29,7 @@ router.post("/register", (req, res) => {
             return res.status(400).json({ message: {msgBody: "Email is already in use", msgError: true} });
 
         else {
-            const newUser = new User({name, email, password, role});
+            const newUser = new User({name, email, password, role: "user"});
             newUser.save(err => {
                 if(err)
                     return res.status(500).json({ message: {msgBody: "Error has occured", msgError: true} });

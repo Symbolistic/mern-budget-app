@@ -7,7 +7,7 @@ import NavBar from "./NavBar/NavBar";
 import About from "./about";
 import Login from "./RegisterLogin/Login";
 import Register from "./RegisterLogin/Register";
-import HomePage from "./HomePage/HomePage";
+import Home from "./Home/Home";
 import Budget from "./BudgetPage/Budget";
 
 
@@ -17,7 +17,7 @@ function App() {
       <div className="wrapper">
         <NavBar />
           <Switch>
-            <Route exact path="/" component={HomePage} />
+            <Route exact path="/" component={Home} />
             <Route exact path="/about" component={About} />
             <UnPrivateRoute exact path="/login" component={Login} />
             <UnPrivateRoute exact path="/register" component={Register} />

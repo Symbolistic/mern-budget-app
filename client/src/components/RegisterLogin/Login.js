@@ -16,9 +16,7 @@ const Login = (props) => {
 
     const onSubmit = event => {
         event.preventDefault();
-        console.log(user)
         AuthService.login(user).then(data => {
-            console.log(data);
             const { isAuthenticated, user, message } = data;
             if(isAuthenticated) {
                 authContext.setUser(user);
@@ -57,6 +55,8 @@ const Login = (props) => {
 				<button className="btn btn-lg btn-primary btn-block" type="submit">
 					Log in
 				</button>
+
+                <p className="message">Not registered? <a href="/register">Create an account</a></p>
 			</form>
             {message ?  <Message message={message} /> : null}
 		</div>

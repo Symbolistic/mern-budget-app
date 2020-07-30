@@ -11,272 +11,365 @@ import Expense from "./BudgetInfo/Expense";
 import Charts from "./Charts/Charts";
 
 const Budget = () => {
-    // Current Year and Month being displayed. Month is based on 0 index value (So January is 0)
-    const [year, setYear] = useState(new Date().getFullYear());
-    const [month, setMonth] = useState(new Date().getMonth());
-    const allMonths = ["January", "Febuary", "March", "April", "May", "June", "July",
-                        "August", "September", "October", "November", "December"];
+	// Current Year and Month being displayed. Month is based on 0 index value (So January is 0)
+	const [year, setYear] = useState(new Date().getFullYear());
+	const [month, setMonth] = useState(new Date().getMonth());
+	const allMonths = [
+		"January",
+		"Febuary",
+		"March",
+		"April",
+		"May",
+		"June",
+		"July",
+		"August",
+		"September",
+		"October",
+		"November",
+		"December",
+	];
 
-    // Budget: Income, and Expense info
-    const [budget, setBudget] = useState({
-        incomeGroup: [],
-        expenseGroup: []
-    });
-    const [income, setIncome] = useState([]);
-    const [expense, setExpense] = useState([]);
-    const [savings, setSavings] = useState([]);
+	// Budget: Income, and Expense info
+	const [budget, setBudget] = useState({
+		incomeGroup: [],
+		expenseGroup: [],
+	});
+	const [income, setIncome] = useState([]);
+	const [expense, setExpense] = useState([]);
+	const [savings, setSavings] = useState([]);
 
-    const [totalIncome, setTotalIncome] = useState('0');
-    const [totalSavings, setTotalSavings] = useState('0')
-    const [totalExpense, setTotalExpense] = useState('0');
+	const [totalIncome, setTotalIncome] = useState("0");
+	const [totalSavings, setTotalSavings] = useState("0");
+	const [totalExpense, setTotalExpense] = useState("0");
 
-    // Handles editing of data
+	// Handles editing of data
 	const [editEntry, setEditEntry] = useState({});
 
-    // This data is for the modals
-    const [incomeModalDisplay, setIncomeModalDisplay] = useState(false);
-    const [savingsModalDisplay, setSavingsModalDisplay] = useState(false);
+	// This data is for the modals
+	const [incomeModalDisplay, setIncomeModalDisplay] = useState(false);
+	const [savingsModalDisplay, setSavingsModalDisplay] = useState(false);
 	const [expenseModalDisplay, setExpenseModalDisplay] = useState(false);
-    const [currentlyEditing, setCurrentlyEditing] = useState(false);
-    
-    // This data is for the pie chart
-    const [categoryNames, setCategoryNames] = useState([]);
+	const [currentlyEditing, setCurrentlyEditing] = useState(false);
+
+	// This data is for the pie chart
+	const [categoryNames, setCategoryNames] = useState([]);
     const [categoryTotalExpenses, setCategoryTotalExpenses] = useState([]);
+    
+    // This is to prevent double clicking
+    const [disabled, setDisabled] = useState(false);
 
+	// This is to check which user is currently logged in
+	const authContext = useContext(AuthContext);
 
-    // This is to check which user is currently logged in
-    const authContext = useContext(AuthContext);
-
-	const variables = { 
+	const variables = {
         userFrom: authContext.user.userFrom,
-        month: month,
-        year: year
-    };
-
+        budgetType: "Monthly",
+		month: month,
+		year: year,
+	};
 
 	useEffect(() => {
-		fetchBudget();
+        fetchBudget();
+
 	}, [month]);
 
 	const calculateIncome = (income) => {
+		if (income) {
+			const totalIncome = income.reduce((acc, currVal) => {
+				// Get the total sum of this categories expense entries
+				const entriesTotal = currVal.incomeEntries.reduce(
+					(accEntries, currEntry) => {
+						return accEntries + currEntry.amount;
+					},
+					0
+				);
+				return acc + entriesTotal;
+			}, 0);
+			setTotalIncome(
+				totalIncome.toLocaleString(undefined, {
+					minimumFractionDigits: 2,
+					maximumFractionDigits: 2,
+				})
+			);
+		}
+	};
 
-        if (income) {
-            const totalIncome = income.reduce((acc, currVal) => {
+	const calculateSavings = (savings) => {
+		if (savings) {
+			const totalSavings = savings.reduce((acc, currVal) => {
+				return acc + currVal.budgetedAmount;
+			}, 0);
+			setTotalSavings(
+				totalSavings.toLocaleString(undefined, {
+					minimumFractionDigits: 2,
+					maximumFractionDigits: 2,
+				})
+			);
+		}
+	};
 
-                // Get the total sum of this categories expense entries
-                const entriesTotal = currVal.incomeEntries.reduce((accEntries, currEntry) => {
-                    return accEntries + currEntry.amount;
-                }, 0)     
-                return acc + entriesTotal;
-            }, 0);
-            setTotalIncome(totalIncome.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
-        }
-    };
+	const calculateExpense = (expense) => {
+		if (expense) {
+			const totalExpense = expense.reduce((acc, currVal) => {
+				// Get the total sum of this categories expense entries
+				const entriesTotal = currVal.expenseEntries.reduce(
+					(accEntries, currEntry) => {
+						return accEntries + currEntry.budgetedAmount;
+					},
+					0
+				);
+				return acc + entriesTotal;
+			}, 0);
+			setTotalExpense(
+				totalExpense.toLocaleString(undefined, {
+					minimumFractionDigits: 2,
+					maximumFractionDigits: 2,
+				})
+			);
+		}
+	};
 
-    const calculateSavings = (savings) => {
-        if (savings) {
-            const totalSavings = savings.reduce((acc, currVal) => {
-                return acc + currVal.budgetedAmount;
-            }, 0);
-            setTotalSavings(totalSavings.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
-        };
-    };
-    
-    const calculateExpense = (expense) => {
+	const combineExpenseGroupsAndEntries = (groups, entries) => {
+		const expenseGroups = groups.map((val) => {
+			val.expenseEntries = [];
+			return val;
+		});
 
-        if (expense) {
-            const totalExpense = expense.reduce((acc, currVal) => {
+		entries.map((entry) => {
+			const index = expenseGroups.findIndex(
+				(group) => group._id === entry.entryFrom
+			);
+			return expenseGroups[index].expenseEntries.push(entry);
+		});
 
-                // Get the total sum of this categories expense entries
-                const entriesTotal = currVal.expenseEntries.reduce((accEntries, currEntry) => {
-                    return accEntries + currEntry.budgetedAmount;
-                }, 0)     
-                return acc + entriesTotal;
-            }, 0);
-            setTotalExpense(totalExpense.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
-        }
-    };
+		setExpense(expenseGroups);
+		calculateExpense(expenseGroups);
+		grabChartData(expenseGroups);
+	};
 
-    const combineExpenseGroupsAndEntries = (groups, entries) => {
-        const expenseGroups = groups.map(val => {
-            val.expenseEntries = [];
-            return val;
-        });
+	const combineIncomeGroupsAndEntries = (groups, entries) => {
+		const incomeGroups = groups.map((val) => {
+			val.incomeEntries = [];
+			return val;
+		});
 
-        entries.map(entry => {
-            const index = expenseGroups.findIndex(group => group._id === entry.entryFrom);
-            return expenseGroups[index].expenseEntries.push(entry);
-        })
+		entries.map((entry) => {
+			const index = incomeGroups.findIndex(
+				(group) => group._id === entry.entryFrom
+			);
+			return incomeGroups[index].incomeEntries.push(entry);
+		});
 
-        setExpense(expenseGroups);
-        calculateExpense(expenseGroups);
-        grabChartData(expenseGroups);
-    }
+		setIncome(incomeGroups);
+		calculateIncome(incomeGroups);
+	};
 
-    const combineIncomeGroupsAndEntries = (groups, entries) => {
-        const incomeGroups = groups.map(val => {
-            val.incomeEntries = [];
-            return val;
-        });
+	const grabChartData = (expenseGroups) => {
+		// Grab all the data for names of categories and put it into an array
+		const categoryNames = expenseGroups.map((category) => category.name);
+		// Same, but we grab the total expenses (add them all up for each category) and put em into an array
+		const categoryTotalExpenses = expenseGroups.map((group) => {
+			return group.expenseEntries.reduce((accEntries, currEntry) => {
+				return accEntries + currEntry.budgetedAmount;
+			}, 0);
+		});
 
-        entries.map(entry => {
-            const index = incomeGroups.findIndex(group => group._id === entry.entryFrom);
-            return incomeGroups[index].incomeEntries.push(entry);
-        })
-
-        setIncome(incomeGroups);
-        calculateIncome(incomeGroups);
-    }
-    
-    const grabChartData = (expenseGroups) => {
-        // Grab all the data for names of categories and put it into an array
-        const categoryNames = expenseGroups.map(category => category.name);
-        // Same, but we grab the total expenses (add them all up for each category) and put em into an array
-        const categoryTotalExpenses = expenseGroups.map(group => {
-             return group.expenseEntries.reduce((accEntries, currEntry) => {
-                return accEntries + currEntry.budgetedAmount;
-            }, 0);
-        });
-
-        // After collecting the data and calculating it up, pass it to state
-        setCategoryNames(categoryNames);
-        setCategoryTotalExpenses(categoryTotalExpenses);
-    }
+		// After collecting the data and calculating it up, pass it to state
+		setCategoryNames(categoryNames);
+		setCategoryTotalExpenses(categoryTotalExpenses);
+	};
 
 	const fetchBudget = () => {
-        // Fetch INCOME
+		// Fetch INCOME
 		axios.post("/api/income/getIncome", variables).then((response) => {
 			if (response.data.success) {
-                combineIncomeGroupsAndEntries(response.data.groups, response.data.entries)
-
+				combineIncomeGroupsAndEntries(
+					response.data.groups,
+					response.data.entries
+				);
 			} else {
 				console.log("Failed to get budget");
 			}
-        });
+		});
 
-        // Fetch SAVINGS
-        axios.post("/api/savings/getSavings", variables).then((response) => {
+		// Fetch SAVINGS
+		axios.post("/api/savings/getSavings", variables).then((response) => {
 			if (response.data.success) {
-                calculateSavings(response.data.groups);
-                setSavings(response.data.groups);
+				calculateSavings(response.data.groups);
+				setSavings(response.data.groups);
 			} else {
 				console.log("Failed to get budget");
 			}
-        });
-        
-        // Fetch EXPENSE
-        axios.post("/api/expense/getExpense", variables).then((response) => {
-			if (response.data.success) {
-                combineExpenseGroupsAndEntries(response.data.groups, response.data.entries);
+		});
 
+		// Fetch EXPENSE
+		axios.post("/api/expense/getExpense", variables).then((response) => {
+			if (response.data.success) {
+				combineExpenseGroupsAndEntries(
+					response.data.groups,
+					response.data.entries
+				);
 			} else {
-				console.log("Failed to get budget");
+				console.log("Failed to get expenses");
 			}
-        });
+		});
     };
     
+    const createBudget = () => {
+        if (income.length < 1 && expense.length < 1 && savings.length < 1) {
+            setDisabled(true);
 
-	return (
-		<div className="dashboard-container">
-            <div id="calendar">
-                <div id="month-year">
-                    <h2>{allMonths[month]} 2020</h2>
+            axios.post("/api/budget/createBudget", variables).then((response) => {
+                if (response.data.success) {
+                    fetchBudget();
+                    setDisabled(false);
+                } else {
+                    console.log("Failed to create budget");
+                }
+            });
+        }
+    }
+
+    // Conditional Render is here
+	if (income.length < 1 && expense.length < 1 && savings.length < 1) {
+		return (
+			<div className="dashboard-container">
+				<div id="calendar">
+					<div id="month-year">
+						<h2>{allMonths[month]} 2020</h2>
+					</div>
+
+					<div id="months">
+						{allMonths.map((month, index) => (
+							<button
+								key={index}
+								className="month-btn"
+								name={month}
+								onClick={() => setMonth(index)}
+							>
+								{month}
+							</button>
+						))}
+					</div>
+				</div>
+
+                <div id="create-budget-container">
+                    <h2>You haven't created a budget for this month!</h2>
+                    <p>Lets make one!</p>
+                    <button className="basic-budget-btn" onClick={createBudget} disabled={disabled}>Generate Budget Template</button>
                 </div>
+			</div>
+		);
+	} else {
+		return (
+			<div className="dashboard-container">
+				<div id="calendar">
+					<div id="month-year">
+						<h2>{allMonths[month]} 2020</h2>
+					</div>
 
-                <div id="months">
-                    {allMonths.map((month,index) => (
-                        <button key={index} className="month-btn" name={month} onClick={() => setMonth(index)}>{month}</button>
-                    ))}
-                </div>
-            </div>
+					<div id="months">
+						{allMonths.map((month, index) => (
+							<button
+								key={index}
+								className="month-btn"
+								name={month}
+								onClick={() => setMonth(index)}
+							>
+								{month}
+							</button>
+						))}
+					</div>
+				</div>
 
-			<Charts 
-                totalExpense={totalExpense}
-                totalIncome={totalIncome}
-                categoryNames={categoryNames}
-                categoryTotalExpenses={categoryTotalExpenses}
-            />
+				<Charts
+					totalExpense={totalExpense}
+					totalIncome={totalIncome}
+					categoryNames={categoryNames}
+					categoryTotalExpenses={categoryTotalExpenses}
+				/>
 
-			<Income
-				setIncomeModalDisplay={setIncomeModalDisplay}
-                fetchBudget={fetchBudget}
-                income={income}
-                totalIncome={totalIncome}
-                calculateIncome={calculateIncome}
-                calculateExpense={calculateExpense}
-				setBudget={setBudget}
-				variables={variables}
-				editEntry={editEntry}
-				setEditEntry={setEditEntry}
-				currentlyEditing={currentlyEditing}
-                setCurrentlyEditing={setCurrentlyEditing}
-                grabChartData={grabChartData}
-			/>
+				<Income
+					setIncomeModalDisplay={setIncomeModalDisplay}
+					fetchBudget={fetchBudget}
+					income={income}
+					totalIncome={totalIncome}
+					calculateIncome={calculateIncome}
+					calculateExpense={calculateExpense}
+					setBudget={setBudget}
+					variables={variables}
+					editEntry={editEntry}
+					setEditEntry={setEditEntry}
+					currentlyEditing={currentlyEditing}
+					setCurrentlyEditing={setCurrentlyEditing}
+					grabChartData={grabChartData}
+				/>
 
-            <Savings
-				setSavingsModalDisplay={setSavingsModalDisplay}
-                fetchBudget={fetchBudget}
-                savings={savings}
-                totalSavings={totalSavings}
-                calculateIncome={calculateIncome}
-                calculateExpense={calculateExpense}
-				setBudget={setBudget}
-				variables={variables}
-				editEntry={editEntry}
-				setEditEntry={setEditEntry}
-				currentlyEditing={currentlyEditing}
-                setCurrentlyEditing={setCurrentlyEditing}
-                grabChartData={grabChartData}
-			/>
+				<Savings
+					setSavingsModalDisplay={setSavingsModalDisplay}
+					fetchBudget={fetchBudget}
+					savings={savings}
+					totalSavings={totalSavings}
+					calculateIncome={calculateIncome}
+					calculateExpense={calculateExpense}
+					setBudget={setBudget}
+					variables={variables}
+					editEntry={editEntry}
+					setEditEntry={setEditEntry}
+					currentlyEditing={currentlyEditing}
+					setCurrentlyEditing={setCurrentlyEditing}
+					grabChartData={grabChartData}
+				/>
 
-			<Expense
-				setExpenseModalDisplay={setExpenseModalDisplay}
-                budget={budget}
-                fetchBudget={fetchBudget}
-                expense={expense}
-                totalExpense={totalExpense}
-                calculateIncome={calculateIncome}
-                calculateExpense={calculateExpense}
-				setBudget={setBudget}
-				variables={variables}
-				editEntry={editEntry}
-				setEditEntry={setEditEntry}
-				currentlyEditing={currentlyEditing}
-                setCurrentlyEditing={setCurrentlyEditing}
-                grabChartData={grabChartData}
-			/>
+				<Expense
+					setExpenseModalDisplay={setExpenseModalDisplay}
+					budget={budget}
+					fetchBudget={fetchBudget}
+					expense={expense}
+					totalExpense={totalExpense}
+					calculateIncome={calculateIncome}
+					calculateExpense={calculateExpense}
+					setBudget={setBudget}
+					variables={variables}
+					editEntry={editEntry}
+					setEditEntry={setEditEntry}
+					currentlyEditing={currentlyEditing}
+					setCurrentlyEditing={setCurrentlyEditing}
+					grabChartData={grabChartData}
+				/>
 
-			<IncomeModal
-                incomeModalDisplay={incomeModalDisplay}
-                variables={variables}
-                setIncomeModalDisplay={setIncomeModalDisplay}
-                fetchBudget={fetchBudget}
-                setBudget={setBudget}
-                calculateIncome={calculateIncome}
-                grabChartData={grabChartData}
-			/>
+				<IncomeModal
+					incomeModalDisplay={incomeModalDisplay}
+					variables={variables}
+					setIncomeModalDisplay={setIncomeModalDisplay}
+					fetchBudget={fetchBudget}
+					setBudget={setBudget}
+					calculateIncome={calculateIncome}
+					grabChartData={grabChartData}
+				/>
 
-            <SavingsModal
-                savingsModalDisplay={savingsModalDisplay}
-                variables={variables}
-                setSavingsModalDisplay={setSavingsModalDisplay}
-                fetchBudget={fetchBudget}
-                setBudget={setBudget}
-                calculateIncome={calculateIncome}
-                grabChartData={grabChartData}
-			/>
+				<SavingsModal
+					savingsModalDisplay={savingsModalDisplay}
+					variables={variables}
+					setSavingsModalDisplay={setSavingsModalDisplay}
+					fetchBudget={fetchBudget}
+					setBudget={setBudget}
+					calculateIncome={calculateIncome}
+					grabChartData={grabChartData}
+				/>
 
-			<ExpenseModal
-                expenseModalDisplay={expenseModalDisplay}
-                variables={variables}
-				setExpenseModalDisplay={setExpenseModalDisplay}
-                setBudget={setBudget}
-                fetchBudget={fetchBudget}
-                calculateIncome={calculateIncome}
-                grabChartData={grabChartData}
-			/>
-		</div>
-	);
+				<ExpenseModal
+					expenseModalDisplay={expenseModalDisplay}
+					variables={variables}
+					setExpenseModalDisplay={setExpenseModalDisplay}
+					setBudget={setBudget}
+					fetchBudget={fetchBudget}
+					calculateIncome={calculateIncome}
+					grabChartData={grabChartData}
+				/>
+			</div>
+		);
+	}
 };
 
 export default Budget;

@@ -4,7 +4,7 @@ import Message from "../Message";
 import "./RegisterLogin.css";
 
 const Register = (props) => {
-	const [user, setUser] = useState({ username: "", password: "", role: "" });
+	const [user, setUser] = useState({ username: "", password: "" });
 	const [message, setMessage] = useState(null);
 	let timerID = useRef(null);
 
@@ -19,7 +19,7 @@ const Register = (props) => {
 	};
 
 	const resetForm = () => {
-		setUser({ name: "", email: "", password: "", role: "" });
+		setUser({ name: "", email: "", password: "" });
 	};
 
 	const onSubmit = (event) => {
@@ -74,18 +74,6 @@ const Register = (props) => {
 					className="form-control"
 					placeholder="Enter Password"
 					value={user.password}
-				/>
-
-				<label htmlFor="role" className="sr-only">
-					Role:
-				</label>
-				<input
-					type="text"
-					name="role"
-					onChange={onChange}
-					className="form-control"
-					placeholder="Enter Role (admin/user)"
-					value={user.role}
 				/>
 
 				<button className="btn btn-lg btn-primary btn-block" type="submit">
