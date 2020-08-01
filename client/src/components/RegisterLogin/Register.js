@@ -4,7 +4,9 @@ import Message from "../Message";
 import "./RegisterLogin.css";
 
 const Register = (props) => {
-	const [user, setUser] = useState({ username: "", password: "" });
+	
+	// State Handles for the input fields
+	const [user, setUser] = useState({ name: "", email: "", password: "" });
 	const [message, setMessage] = useState(null);
 	let timerID = useRef(null);
 
@@ -24,6 +26,7 @@ const Register = (props) => {
 
 	const onSubmit = (event) => {
 		event.preventDefault();
+		
 		AuthService.register(user).then((data) => {
 			const { message } = data;
 			setMessage(message);

@@ -14,7 +14,7 @@
 	width: 100%;
 	height: 100%;
 	margin: 0 auto;
-	padding: 40px;
+	padding: 10px;
 	max-width: 100%;
 }
 
@@ -30,7 +30,8 @@
 
 #months {
 	display: grid;
-	grid-template-columns: repeat(6, 1fr);
+	grid-template-columns: repeat(auto-fit, minmax( 1fr));
+	/*grid-template-columns: repeat(6, 1fr);*/
 	gap: 10px;
 	height:100%;
 	margin: auto;
@@ -42,7 +43,7 @@
 
 #chart-data {
 	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+	grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
 	gap: 10px;
 	background-color: #ffffff;
 	margin: 30px 0;
@@ -66,6 +67,7 @@
 canvas {
 	height: 100%!important;
 	width: 100%!important;
+	display: block;
 }
 
 /* This will help with the responsiveness of the bar charts since they easily glitch */
@@ -74,6 +76,7 @@ canvas {
 	#doughnut-chart-container {
 		border-right: none;
 		border-bottom: 1px dashed black;
+		grid-template-columns: 1fr;
 	}
 }
 
@@ -105,13 +108,16 @@ canvas {
 	border-radius: 0.25rem;
 	padding: 30px;
 	box-shadow: .3em 0.5em 1.3em rgba(31,36,38,0.05);
+	max-width: 350px;
 }
 
 .header-area {
 	display: grid;
-	grid-template-columns: 1fr 160px;
+	grid-template-columns: 1fr 110px;
 	justify-content: space-evenly;
 	margin-bottom: 30px;
+
+	overflow-wrap: break-word;
 }
 
 .header-area > h2 {
@@ -144,7 +150,7 @@ canvas {
 .data-wrapper {
 	width: 100%;
 	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+	grid-template-columns: repeat(auto-fit, minmax(1fr)); /* ISSUE IS HERE, CHANGE TO 100PX */
 	text-align: center;
 	gap: 20px;
 	margin-top: 20px;
@@ -277,9 +283,22 @@ table {
 	table-layout: fixed;
 }
 
+th {
+
+}
+
+tr:nth-child(odd) {
+	width: 10px;
+}
+
+tr:nth-child(even) {
+	width: 10px;
+}
+
 td {
 	word-break: keep-all;
 	overflow-wrap: break-word;
+	width: 10%;
 }
 
 table td,
@@ -290,14 +309,11 @@ table th {
 table thead th {
 	text-align: left;
 }
-table thead th:nth-child(0),
-table thead th:nth-child(1) {
-	width: 25%;
-}
 
-table thead th:nth-child(2) {
-	width: 20%;
-}
-table thead th:nth-child(3) {
-	width: 30%;
+
+@media screen and (max-width:730px) {
+
+	table {
+		
+	}
 }

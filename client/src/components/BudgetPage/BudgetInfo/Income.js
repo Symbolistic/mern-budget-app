@@ -154,7 +154,7 @@ function Income({
 											</tr>
 											
 											{group.incomeEntries.map((incomeEntry, index) => (
-												<tr key={index} id="expense-data">
+												<tr key={index} id="income-data">
 													<td className="description">
 														{currentlyEditing[incomeEntry._id] === true ? (
 															<input

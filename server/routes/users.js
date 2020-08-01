@@ -19,14 +19,23 @@ const signToken = userID => {
 
 router.post("/register", (req, res) => {
     const { name, email, password } = req.body;
-    User.findOne({ email }, (err, document) => {
+    User.findOne({ email: email.toLowerCase() }, (err, document) => {
         if (err){
             return res.status(500).json({ message: {msgBody: "Error has occured", msgError: true} });
         }
-            
-
+        
+        // Error code if email exists
         if (document)
             return res.status(400).json({ message: {msgBody: "Email is already in use", msgError: true} });
+
+        // Error code if name field is empty/falsy
+        if (!name)
+            return res.status(400).json({ message: {msgBody: "Please enter your name", msgError: true} });
+
+        // Error code is password is less than 6 characters
+        if (password.length < 6) 
+            return res.status(400).json({ message: {msgBody: "Password must be at least 6 characters", msgError: true} });
+        
 
         else {
             const newUser = new User({name, email: email.toLowerCase(), password, role: "user"});
