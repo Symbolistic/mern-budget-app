@@ -52,7 +52,7 @@ function NavBar(props) {
         <div className="nav-container">
             <Link to='/'>
                 <div className="app-name">
-                    <h2>Budget App</h2>
+                    <h2>Budget</h2>
                 </div>
             </Link>
             

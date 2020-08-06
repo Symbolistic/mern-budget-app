@@ -96,3 +96,7 @@ h3 {
 .container .info span .fa {
   color: #EF3B3A;
 }
+
+.alert {
+  text-align: center;
+}

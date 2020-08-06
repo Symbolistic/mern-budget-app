@@ -18,7 +18,6 @@ function Expense({
 }) {
 	const [newEntry, setNewEntry] = useState({});
 
-
 	// This will handle all the input elements
 	const handleChange = (event) => {
 		const { name, value } = event.target;
@@ -36,7 +35,6 @@ function Expense({
 			...editEntry,
 			[name]: value,
 		});
-
 	};
 
 	const editExpense = (expenseEntryID) => {
@@ -85,7 +83,6 @@ function Expense({
 
 	// This will add an expense to a specific category
 	const addExpense = (id, name) => {
-
 		const data = {
 			entryFrom: id,
 			description: newEntry[id],
@@ -152,97 +149,90 @@ function Expense({
 									</button>
 								</div>
 								<div id="entries-data">
-									<table>
-										<tbody>
-											<tr>
-												<th>Description</th>
-												<th>Budgeted</th>
-                                            	<th>Actual</th>
-												<th></th>
-												<th></th>
-											</tr>
-                                            
-											{category.expenseEntries.map((expenseEntry, index) => (
-														<tr key={index} id="expense-data">
-															<td className="description">
-																{currentlyEditing[expenseEntry._id] === true ? (
-																	<input
-																		name={`description${expenseEntry._id}`}
-																		onChange={handleExpenseEdit}
-																		value={
-																			editEntry[`description${expenseEntry._id}`]
-																				? editEntry[`description${expenseEntry._id}`]
-																				: expenseEntry.description
-																		}
-																	/>
-																) : (
-																	expenseEntry.description
-																)}
-															</td>
-															<td className="data">
-																{currentlyEditing[expenseEntry._id] === true ? (
-																	<input
-																		name={`budgetedAmount${expenseEntry._id}`}
-																		onChange={handleExpenseEdit}
-																		value={
-																			editEntry[`budgetedAmount${expenseEntry._id}`]
-																				? editEntry[`budgetedAmount${expenseEntry._id}`]
-																				: expenseEntry.budgetedAmount
-																		}
-																	/>
-																) : (
-																	expenseEntry.budgetedAmount
-																)}
-															</td>
-															<td className="data">
-																{currentlyEditing[expenseEntry._id] === true ? (
-																	<input
-																		name={`actualAmount${expenseEntry._id}`}
-																		onChange={handleExpenseEdit}
-																		value={
-																			editEntry[`actualAmount${expenseEntry._id}`]
-																				? editEntry[`actualAmount${expenseEntry._id}`]
-																				: expenseEntry.actualAmount
-																		}
-																	/>
-																) : (
-																	expenseEntry.actualAmount
-																)}
-															</td>
-															<td className="expense-icon1">
-																{currentlyEditing[expenseEntry._id] === true ? (
-																	<DoneIcon
-																		id={expenseEntry._id}
-																		onClick={() =>
-																			editExpense(
-																				expenseEntry._id
-																			)
-																		}
-																	/>
-																) : (
-																	<EditIcon
-																		onClick={() =>
-																			setCurrentlyEditing({
-																				[expenseEntry._id]: true,
-																			})
-																		}
-																	/>
-																)}
-															</td>
-															<td className="expense-icon2">
-																<DeleteIcon
-																	onClick={() =>
-																		deleteExpense(
-																			expenseEntry._id
-																		)
-																	}
-																/>
-															</td>
-														</tr>
-												  ))									
-												}
-										</tbody>
-									</table>
+									<ul className="row table-header">
+										<li className="flex-item flex1">Description</li>
+										<li className="flex-item flex2">Amount</li>
+										<li className="flex-item flex3">Actual</li>
+										<li className="flex-item flex4"></li>
+										<li className="flex-item flex5"></li>
+									</ul>
+
+									{category.expenseEntries.map((expenseEntry, index) => (
+										<ul key={expenseEntry+index} className="row">
+											<li className="flex-item flex1 description">
+												{currentlyEditing[expenseEntry._id] === true ? (
+													<input
+														className="edit-input"
+														name={`description${expenseEntry._id}`}
+														maxLength="30"
+														onChange={handleExpenseEdit}
+														value={
+															editEntry[`description${expenseEntry._id}`]
+																? editEntry[`description${expenseEntry._id}`]
+																: expenseEntry.description
+														}
+													/>
+												) : (
+													expenseEntry.description
+												)}
+											</li>
+											<li className="flex-item flex2">
+												{currentlyEditing[expenseEntry._id] === true ? (
+													<input
+														className="edit-input"
+														name={`budgetedAmount${expenseEntry._id}`}
+														maxLength="30"
+														onChange={handleExpenseEdit}
+														value={
+															editEntry[`budgetedAmount${expenseEntry._id}`]
+																? editEntry[`budgetedAmount${expenseEntry._id}`]
+																: expenseEntry.budgetedAmount
+														}
+													/>
+												) : (
+													expenseEntry.budgetedAmount
+												)}
+											</li>
+											<li className="flex-item flex3">
+												{currentlyEditing[expenseEntry._id] === true ? (
+													<input
+														className="edit-input"
+														name={`actualAmount${expenseEntry._id}`}
+														maxLength="30"
+														onChange={handleExpenseEdit}
+														value={
+															editEntry[`actualAmount${expenseEntry._id}`]
+																? editEntry[`actualAmount${expenseEntry._id}`]
+																: expenseEntry.actualAmount
+														}
+													/>
+												) : (
+													expenseEntry.actualAmount
+												)}
+											</li>
+											<li className="flex-item flex4">
+												{currentlyEditing[expenseEntry._id] === true ? (
+													<DoneIcon
+														id={expenseEntry._id}
+														onClick={() => editExpense(expenseEntry._id)}
+													/>
+												) : (
+													<EditIcon
+														onClick={() =>
+															setCurrentlyEditing({
+																[expenseEntry._id]: true,
+															})
+														}
+													/>
+												)}
+											</li>
+											<li className="flex-item flex5">
+												<DeleteIcon
+													onClick={() => deleteExpense(expenseEntry._id)}
+												/>
+											</li>
+										</ul>
+									))}
 
 									<form className="add-entry">
 										{/* The reason I use val._id is because I want to search by id, not name
@@ -251,6 +241,7 @@ function Expense({
 											className="entry-description entry-data"
 											type="text"
 											name={category._id}
+											maxLength="30"
 											onChange={handleChange}
 											value={newEntry[category.name]}
 											placeholder="Description"
@@ -260,6 +251,7 @@ function Expense({
 												className="entry-data"
 												type="text"
 												name={category._id + "budgetedAmount"}
+												maxLength="30"
 												onChange={handleChange}
 												value={newEntry[category.name + "budgetedAmount"]}
 												placeholder="Budget Amount"

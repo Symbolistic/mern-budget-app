@@ -165,6 +165,7 @@ const Budget = () => {
 	};
 
 	const grabChartData = (expenseGroups) => {
+		
 		// Grab all the data for names of categories and put it into an array
 		const categoryNames = expenseGroups.map((category) => category.name);
 		// Same, but we grab the total expenses (add them all up for each category) and put em into an array
@@ -285,6 +286,7 @@ const Budget = () => {
 				<Charts
 					totalExpense={totalExpense}
 					totalIncome={totalIncome}
+					totalSavings={totalSavings}
 					categoryNames={categoryNames}
 					categoryTotalExpenses={categoryTotalExpenses}
 				/>

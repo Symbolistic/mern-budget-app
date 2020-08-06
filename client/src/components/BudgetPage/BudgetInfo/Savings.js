@@ -103,21 +103,19 @@ function Savings({
 									</button>
 								</div>
 
-								<table id="data">
-									<tbody>
-										<tr>
-											<th>Budgeted</th>
-											<th>Actual</th>
-											<th></th>
-										</tr>
+								<ul className="row table-header">
+										<li className="flex-item flex1">Budgeted</li>
+										<li className="flex-item flex2">Actual</li>
+										<li className="flex-item flex4"></li>
+									</ul>
 
-										<tr>
-											{/* I use ID: RowName (PaySchedule) so I can tell the code to target
-                                            this specific category (using the ID) and target this specific row (using its name)*/}
-											<td>
-												{currentlyEditing[group._id] === true ? (
+									<ul className="row">
+										<li className="flex-item flex1">
+										{currentlyEditing[group._id] === true ? (
 													<input
+														className="edit-input"
 														name={`budgetedAmount${group._id}`}
+														maxLength="30"
 														onChange={handleSavingsEdit}
 														value={
 															editEntry[`budgetedAmount${group._id}`]
@@ -128,12 +126,13 @@ function Savings({
 												) : (
 													group.budgetedAmount
 												)}
-											</td>
-
-											<td className="data">
-												{currentlyEditing[group._id] === true ? (
+										</li>
+										<li className="flex-item flex2">
+										{currentlyEditing[group._id] === true ? (
 													<input
+														className="edit-input"
 														name={`actualAmount${group._id}`}
+														maxLength="30"
 														onChange={handleSavingsEdit}
 														value={
 															editEntry[`actualAmount${group._id}`]
@@ -144,9 +143,9 @@ function Savings({
 												) : (
 													group.actualAmount
 												)}
-											</td>
-											<td>
-												{currentlyEditing[group._id] === true ? (
+										</li>
+										<li className="flex-item flex4">
+										{currentlyEditing[group._id] === true ? (
 													<DoneIcon
 														id={group._id}
 														name="paySchedule"
@@ -159,10 +158,8 @@ function Savings({
 														}
 													/>
 												)}
-											</td>
-										</tr>
-									</tbody>
-								</table>
+										</li>
+									</ul>
 							</div>
 					  ))
 					: ""}

@@ -57,6 +57,7 @@ const SavingsModal = (props) => {
 						<input
 							type="text"
 							name="groupName"
+							maxLength="40"
 							value={
 								newCategory["groupName"] ? newCategory["groupName"] : ""
 							}

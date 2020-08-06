@@ -24,6 +24,28 @@ export default {
 			.then((res) => res.json())
 			.then((data) => data);
 	},
+	forgotPassword: (user) => {
+		return fetch("/api/users/forgot-password", {
+			method: "put",
+			body: JSON.stringify(user),
+			headers: {
+				"Content-Type": "application/json",
+			},
+		})
+			.then((res) => res.json())
+			.then((data) => data);
+	},
+	resetPassword: (user) => {
+		return fetch("/api/users/reset-password", {
+			method: "put",
+			body: JSON.stringify(user),
+			headers: {
+				"Content-Type": "application/json",
+			},
+		})
+			.then((res) => res.json())
+			.then((data) => data);
+	},
 	logout: () => {
 		return fetch("/api/users/logout")
 			.then((res) => res.json())

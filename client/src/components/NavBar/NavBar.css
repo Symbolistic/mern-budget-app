@@ -24,7 +24,7 @@ a {
     margin: 0 auto;
     background: rgb(170,70,185);
 background: linear-gradient(90deg, rgba(170,70,185,1) 0%, rgba(138,28,163,1) 49%, rgba(92,12,203,1) 100%);
-    max-width: 100%; 
+    width: 100%; 
     display: grid;
     grid-template-columns: 1fr 1fr; 
     color: #ffffff;

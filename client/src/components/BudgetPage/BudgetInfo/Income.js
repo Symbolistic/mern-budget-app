@@ -101,14 +101,14 @@ function Income({
 		const data = {
 			entryFrom: id,
 			description: newEntry[id],
-			amount: newEntry[id + "Price"],
+			amount: newEntry[id + "budgetedAmount"],
 		};
 
 		axios.post("/api/income/addIncomeEntry", data).then((response) => {
 			if (response.data.success) {
 				fetchBudget();
 			} else {
-				console.log("Failed to add to expenses");
+				console.log("Failed to add to income");
 			}
 		});
 	};
@@ -144,73 +144,73 @@ function Income({
 									</button>
 								</div>
 								<div id="entries-data">
-									<table>
-										<tbody>
-											<tr>
-												<th>Description</th>
-												<th>Amount</th>
-												<th></th>
-												<th></th>
-											</tr>
-											
-											{group.incomeEntries.map((incomeEntry, index) => (
-												<tr key={index} id="income-data">
-													<td className="description">
-														{currentlyEditing[incomeEntry._id] === true ? (
-															<input
-																name={`description${incomeEntry._id}`}
-																onChange={handleIncomeEdit}
-																value={
-																	editEntry[`description${incomeEntry._id}`]
-																		? editEntry[`description${incomeEntry._id}`]
-																		: incomeEntry.description
-																}
-															/>
-														) : (
-															incomeEntry.description
-														)}
-													</td>
-													<td className="data">
-														{currentlyEditing[incomeEntry._id] === true ? (
-															<input
-																name={`amount${incomeEntry._id}`}
-																onChange={handleIncomeEdit}
-																value={
-																	editEntry[`amount${incomeEntry._id}`]
-																		? editEntry[`amount${incomeEntry._id}`]
-																		: incomeEntry.amount
-																}
-															/>
-														) : (
-															incomeEntry.amount
-														)}
-													</td>
-													<td className="income-icon1">
-														{currentlyEditing[incomeEntry._id] === true ? (
-															<DoneIcon
-																id={incomeEntry._id}
-																onClick={() => editIncomeEntry(incomeEntry._id)}
-															/>
-														) : (
-															<EditIcon
-																onClick={() =>
-																	setCurrentlyEditing({
-																		[incomeEntry._id]: true,
-																	})
-																}
-															/>
-														)}
-													</td>
-													<td className="income-icon2">
-														<DeleteIcon
-															onClick={() => deleteIncomeEntry(incomeEntry._id)}
-														/>
-													</td>
-												</tr>
-											))}
-										</tbody>
-									</table>
 
+									<ul className="row table-header">
+										<li className="flex-item flex1">Description</li>
+										<li className="flex-item flex2">Amount</li>
+										<li className="flex-item flex4"></li>
+										<li className="flex-item flex5"></li>
+									</ul>
+
+									{group.incomeEntries.map((incomeEntry, index) => (
+										<ul key={incomeEntry+index} className="row">
+											<li className="flex-item flex1 description">
+												{currentlyEditing[incomeEntry._id] === true ? (
+													<input
+														className="edit-input"
+														name={`description${incomeEntry._id}`}
+														maxLength="30"
+														onChange={handleIncomeEdit}
+														value={
+															editEntry[`description${incomeEntry._id}`]
+																? editEntry[`description${incomeEntry._id}`]
+																: incomeEntry.description
+														}
+													/>
+												) : (
+													incomeEntry.description
+												)}
+											</li>
+											<li className="flex-item flex2">
+												{currentlyEditing[incomeEntry._id] === true ? (
+													<input
+														className="edit-input"
+														name={`amount${incomeEntry._id}`}
+														maxLength="30"
+														onChange={handleIncomeEdit}
+														value={
+															editEntry[`amount${incomeEntry._id}`]
+																? editEntry[`amount${incomeEntry._id}`]
+																: incomeEntry.amount
+														}
+													/>
+												) : (
+													incomeEntry.amount
+												)}
+												</li>
+
+											<li className="flex-item flex4">
+											{currentlyEditing[incomeEntry._id] === true ? (
+													<DoneIcon
+														onClick={() => editIncomeEntry(incomeEntry._id)}
+													/>
+												) : (
+													<EditIcon
+														onClick={() =>
+															setCurrentlyEditing({
+																[incomeEntry._id]: true,
+															})
+														}
+													/>
+												)}
+											</li>
+											<li className="flex-item flex5">
+											<DeleteIcon
+													onClick={() => deleteIncomeEntry(incomeEntry._id)}
+												/>
+											</li>
+										</ul>
+									))}
 									<form className="add-entry">
 										{/* The reason I use val._id is because I want to search by id, not name
                             just incase 2 categories have the same name, it will cause bugs. */}
@@ -218,6 +218,7 @@ function Income({
 											className="entry-description entry-data"
 											type="text"
 											name={group._id}
+											maxLength="30"
 											onChange={handleChange}
 											value={newEntry[group.name]}
 											placeholder="Description"
@@ -226,10 +227,11 @@ function Income({
 											<input
 												className="entry-data"
 												type="text"
-												name={group._id + "Price"}
+												name={group._id + "budgetedAmount"}
+												maxLength="30"
 												onChange={handleChange}
-												value={newEntry[group.name + "Price"]}
-												placeholder="Amount $$$"
+												value={newEntry[group.name + "budgetedAmount"]}
+												placeholder="Income Amount"
 											/>
 											<AddIcon
 												className="data-submit"

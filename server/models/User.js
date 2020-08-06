@@ -20,7 +20,11 @@ const userSchema = mongoose.Schema({
         enum: ["user", "admin"], 
         default: "user"
     },
-});
+    resetLink: {
+        data: String,
+        default: ''
+    },
+}, {timestamps: true});
 
 userSchema.pre("save", function(next) {
     if (!this.isModified("password"))

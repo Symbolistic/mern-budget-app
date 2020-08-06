@@ -56,7 +56,8 @@ const SavingsModal = (props) => {
 						Savings Name:
 						<input
 							type="text"
-                            name="savingsName"
+							name="savingsName"
+							maxLength="40"
                             placeholder="Emergency Fund"
 							value={
 								newCategory["savingsName"] ? newCategory["savingsName"] : ""
@@ -69,7 +70,8 @@ const SavingsModal = (props) => {
 						Budgeted Amount:
 						<input
 							type="text"
-                            name="budgetedAmount"
+							name="budgetedAmount"
+							maxLength="30"
                             placeholder="Expected Amount"
 							value={newCategory["budgetedAmount"] ? newCategory["budgetedAmount"] : ""}
 							onChange={handleNewSavings}
@@ -80,7 +82,8 @@ const SavingsModal = (props) => {
 						Actual Amount:
 						<input
 							type="text"
-                            name="actualAmount"
+							name="actualAmount"
+							maxLength="30"
                             placeholder="How much you actually put in"
 							value={
 								newCategory["actualAmount"] ? newCategory["actualAmount"] : ""

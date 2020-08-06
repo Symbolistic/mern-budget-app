@@ -59,6 +59,8 @@ const Login = (props) => {
 				</button>
 
                 <p className="message">Not registered? <a href="/register">Create an account</a></p>
+				<br/>
+				<p className="message"><a href="/forgot">Forgot Password</a></p>
 			</form>
             {message ?  <Message message={message} /> : null}
 		</div>

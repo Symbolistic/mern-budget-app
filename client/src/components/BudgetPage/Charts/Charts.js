@@ -4,15 +4,16 @@ import { Bar, Doughnut } from 'react-chartjs-2';
 function Charts({
     totalExpense,
     totalIncome,
+    totalSavings,
     categoryNames,
     categoryTotalExpenses
 }) {
 
     const barData = {
-        labels: ['Monthly Expenses', 'Monthly Income'],
+        labels: ['Expenses', 'Income'],
         datasets: [
             {
-                label: "Monthly Expenses",
+                label: "Expenses vs Income",
                 barThickness: 70,
                 data: [parseFloat(totalExpense.replace(/,/g, '')), parseFloat(totalIncome.replace(/,/g, ''))],
                 borderColor: ['rgb(153, 102, 255)', 'rgb(133,187,101)'],
@@ -41,7 +42,7 @@ function Charts({
             ]
         }
     }
-
+    
     const doughnutData = {
         labels: [...categoryNames],
         datasets: [

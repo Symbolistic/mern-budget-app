@@ -1,7 +1,7 @@
 {
-  "name": "mern-blog",
+  "name": "mern-budget",
   "version": "1.0.0",
-  "description": "MERN blog",
+  "description": "MERN Budget",
   "main": "index.js",
   "engine": {
     "node": "12.16.3",
@@ -23,6 +23,7 @@
     "cookie-parser": "^1.4.5",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
+    "mailgun-js": "^0.22.0",
     "mongoose": "^5.9.22",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",

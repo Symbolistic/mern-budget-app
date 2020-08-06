@@ -6,8 +6,10 @@ import UnPrivateRoute from "./hocs/UnPrivateRoute";
 import NavBar from "./NavBar/NavBar";
 import About from "./about";
 import Home from "./Home/Home";
-import Register from "./RegisterLogin/Register";
-import Login from "./RegisterLogin/Login";
+import Register from "./UserAuth/Register";
+import Login from "./UserAuth/Login";
+import ForgotPassword from "./UserAuth/ForgotPassword";
+import ResetPassword from "./UserAuth/ResetPassword";
 import Budget from "./BudgetPage/Budget";
 
 
@@ -21,6 +23,8 @@ function App() {
             <Route exact path="/about" component={About} />
             <UnPrivateRoute exact path="/login" component={Login} />
             <UnPrivateRoute exact path="/register" component={Register} />
+            <UnPrivateRoute exact path="/forgot" component={ForgotPassword} />
+            <UnPrivateRoute exact path="/reset/:id" component={ResetPassword} />
             <PrivateRoute exact path="/budget" roles={["user", "admin"]} component={Budget} />
           </Switch>
       </div>
