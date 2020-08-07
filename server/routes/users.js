@@ -8,15 +8,6 @@ const passportConfig = require("../middleware/passport"); // This is needed for 
 const config = require("../config/key");
 
 
-const nodemailer = require("nodemailer");
-
-let transporter = nodemailer.createTransport({
-	service: "gmail",
-	auth: {
-		user: config.NODEMAIL_USER,
-		pass: config.NODEMAIL_PASS
-	}
-})
 
 //=================================
 //             User
@@ -154,16 +145,7 @@ router.put("/forgot-password", (req, res) => {
 						message: { msgBody: "Reset Password Link Error", msgError: true },
 					});
 			} else {
-				transporter.sendMail(data, function (error, body) {
-					if (error) {
-						return res.status(500).json({
-							message: { msgBody: "Houston, we have a problem, ERROR", msgError: true}
-						});
-					}
-					return res.json({
-						message: { msgBody: "Password Reset has been emailed to you", msgError: false },
-					});
-				});
+
 			}
 		});
 	});

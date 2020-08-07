@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const path = require('path');
-console.log(process.env.NODE_ENV)
+
 const config = require("./config/key");
 
 mongoose.connect(config.mongoURI,
