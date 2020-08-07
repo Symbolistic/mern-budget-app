@@ -184,7 +184,7 @@ const Budget = () => {
 	};
 
 	const fetchBudget = async () => {
-		// Fetch INCOME
+		// Fetch INCOME 
 		// await axios.post("/api/income/getIncome", variables).then((response) => {
 		// 	if (response.data.success) {
 		// 		combineIncomeGroupsAndEntries(
