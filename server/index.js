@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const path = require('path');
-
+console.log(process.env.NODE_ENV)
 const config = require("./config/key");
 
 mongoose.connect(config.mongoURI,
@@ -23,7 +23,7 @@ app.use('/api/budget', require('./routes/budget'));
 app.use('/api/income', require('./routes/income'));
 app.use('/api/savings', require('./routes/savings'));
 app.use('/api/expense', require('./routes/expense'));
-console.log(process.env.NODE_ENV)
+
 if (process.env.NODE_ENV === "production") {
     // Set static folder 
     app.use(express.static("client/build"));
