@@ -25,7 +25,7 @@ app.use('/api/savings', require('./routes/savings'));
 app.use('/api/expense', require('./routes/expense'));
 
 if (process.env.NODE_ENV === "production") {
-    // Set static folder
+    // Set static folder 
     app.use(express.static("client/build"));
 
     //index.html for all page routes
