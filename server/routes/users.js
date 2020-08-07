@@ -10,13 +10,6 @@ const passportConfig = require("../middleware/passport"); // This is needed for 
 
 const nodemailer = require("nodemailer");
 
-let transporter = nodemailer.createTransport({
-	service: "gmail",
-	auth: {
-		user: process.env.NODEMAIL_USER,
-		pass: process.env.NODEMAIL_PASS
-	}
-})
 
 //=================================
 //             User
@@ -134,6 +127,14 @@ router.put("/forgot-password", (req, res) => {
 		const token = JWT.sign({ _id: user._id }, process.env.RESET_PASSWORD_KEY, {
 			expiresIn: "20m",
 		});
+
+		let transporter = nodemailer.createTransport({
+			service: "gmail",
+			auth: {
+				user: process.env.NODEMAIL_USER,
+				pass: process.env.NODEMAIL_PASS
+			}
+		})
 
 
 		const data = {
