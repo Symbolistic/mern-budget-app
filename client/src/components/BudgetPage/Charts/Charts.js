@@ -5,8 +5,8 @@ function Charts({
     totalExpense,
     totalIncome,
     totalSavings,
-    categoryNames,
-    categoryTotalExpenses
+    groupNames,
+    groupTotalExpenses
 }) {
 
     const barData = {
@@ -44,12 +44,12 @@ function Charts({
     }
     
     const doughnutData = {
-        labels: [...categoryNames],
+        labels: [...groupNames],
         datasets: [
             {
                 label: "Monthly Expenses",
                 barThickness: 100,
-                data: [...categoryTotalExpenses],
+                data: [...groupTotalExpenses],
                 borderColor: ['rgb(153, 102, 255)', 'rgb(133,187,101)',  
                 '#FF6633', '#E666FF', '#22d0f2', '#FFFF99', '#00B3E6', 
                 '#E6B333', '#3366E6', '#999966', '#99FF99', '#B34D4D',

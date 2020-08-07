@@ -52,8 +52,8 @@ const Budget = () => {
 	const [currentlyEditing, setCurrentlyEditing] = useState(false);
 
 	// This data is for the pie chart
-	const [categoryNames, setCategoryNames] = useState([]);
-    const [categoryTotalExpenses, setCategoryTotalExpenses] = useState([]);
+	const [groupNames, setGroupNames] = useState([]);
+    const [groupTotalExpenses, setGroupTotalExpenses] = useState([]);
     
     // This is to prevent double clicking
     const [disabled, setDisabled] = useState(false);
@@ -105,6 +105,8 @@ const Budget = () => {
 					maximumFractionDigits: 2,
 				})
 			);
+
+			return totalSavings;
 		}
 	};
 
@@ -129,7 +131,7 @@ const Budget = () => {
 		}
 	};
 
-	const combineExpenseGroupsAndEntries = (groups, entries) => {
+	const combineExpenseGroupsAndEntries = async (groups, entries) => {
 		const expenseGroups = groups.map((val) => {
 			val.expenseEntries = [];
 			return val;
@@ -142,9 +144,10 @@ const Budget = () => {
 			return expenseGroups[index].expenseEntries.push(entry);
 		});
 
+		
 		setExpense(expenseGroups);
 		calculateExpense(expenseGroups);
-		grabChartData(expenseGroups);
+		return expenseGroups;
 	};
 
 	const combineIncomeGroupsAndEntries = (groups, entries) => {
@@ -164,56 +167,80 @@ const Budget = () => {
 		calculateIncome(incomeGroups);
 	};
 
-	const grabChartData = (expenseGroups) => {
+	const grabChartData = (expenseGroups, totalSavings) => {
 		
 		// Grab all the data for names of categories and put it into an array
-		const categoryNames = expenseGroups.map((category) => category.name);
-		// Same, but we grab the total expenses (add them all up for each category) and put em into an array
-		const categoryTotalExpenses = expenseGroups.map((group) => {
+		const groupNames = expenseGroups.map((group) => group.name);
+		// Same, but we grab the total expenses (add them all up for each group) and put em into an array
+		const groupTotalExpenses = expenseGroups.map((group) => {
 			return group.expenseEntries.reduce((accEntries, currEntry) => {
 				return accEntries + currEntry.budgetedAmount;
 			}, 0);
 		});
-
+		
 		// After collecting the data and calculating it up, pass it to state
-		setCategoryNames(categoryNames);
-		setCategoryTotalExpenses(categoryTotalExpenses);
+		setGroupNames(["Savings", ...groupNames]);
+		setGroupTotalExpenses([totalSavings, ...groupTotalExpenses]);
 	};
 
-	const fetchBudget = () => {
+	const fetchBudget = async () => {
 		// Fetch INCOME
-		axios.post("/api/income/getIncome", variables).then((response) => {
-			if (response.data.success) {
-				combineIncomeGroupsAndEntries(
-					response.data.groups,
-					response.data.entries
-				);
-			} else {
-				console.log("Failed to get budget");
-			}
-		});
+		// await axios.post("/api/income/getIncome", variables).then((response) => {
+		// 	if (response.data.success) {
+		// 		combineIncomeGroupsAndEntries(
+		// 			response.data.groups,
+		// 			response.data.entries
+		// 		);
+		// 	} else {
+		// 		console.log("Failed to get budget");
+		// 	}
+		// });
 
-		// Fetch SAVINGS
-		axios.post("/api/savings/getSavings", variables).then((response) => {
-			if (response.data.success) {
-				calculateSavings(response.data.groups);
-				setSavings(response.data.groups);
-			} else {
-				console.log("Failed to get budget");
-			}
-		});
+		// // Fetch SAVINGS
+		// await axios.post("/api/savings/getSavings", variables).then((response) => {
+		// 	if (response.data.success) {
+		// 		calculateSavings(response.data.groups);
+		// 		setSavings(response.data.groups);
+		// 	} else {
+		// 		console.log("Failed to get budget");
+		// 	}
+		// });
 
-		// Fetch EXPENSE
-		axios.post("/api/expense/getExpense", variables).then((response) => {
-			if (response.data.success) {
-				combineExpenseGroupsAndEntries(
-					response.data.groups,
-					response.data.entries
-				);
-			} else {
-				console.log("Failed to get expenses");
-			}
-		});
+		// // Fetch EXPENSE
+		// await axios.post("/api/expense/getExpense", variables).then((response) => {
+		// 	if (response.data.success) {
+		// 		combineExpenseGroupsAndEntries(
+		// 			response.data.groups,
+		// 			response.data.entries
+		// 		);
+		// 	} else {
+		// 		console.log("Failed to get expenses");
+		// 	}
+		// });
+
+		try {
+
+			const incomeResponse = await axios.post("/api/income/getIncome", variables);
+			const savingsResponse = await axios.post("/api/savings/getSavings", variables);
+			const expenseResponse = await axios.post("/api/expense/getExpense", variables);
+			
+			// Income
+			combineIncomeGroupsAndEntries(incomeResponse.data.groups, incomeResponse.data.entries);
+
+			// Savings
+			const totalSavings = await calculateSavings(savingsResponse.data.groups);
+			setSavings(savingsResponse.data.groups);
+
+			// Expense
+			const expenseGroups = await combineExpenseGroupsAndEntries(expenseResponse.data.groups, expenseResponse.data.entries);
+			
+			
+			grabChartData(expenseGroups, totalSavings);
+
+		} catch (error) {
+			console.log("Error: ",error);
+		}
+
     };
     
     const createBudget = () => {
@@ -287,8 +314,8 @@ const Budget = () => {
 					totalExpense={totalExpense}
 					totalIncome={totalIncome}
 					totalSavings={totalSavings}
-					categoryNames={categoryNames}
-					categoryTotalExpenses={categoryTotalExpenses}
+					groupNames={groupNames}
+					groupTotalExpenses={groupTotalExpenses}
 				/>
 
 				<Income
