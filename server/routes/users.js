@@ -160,7 +160,7 @@ router.put("/forgot-password", (req, res) => {
 					if (error) {
 						console.log(error)
 						return res.status(500).json({
-							message: { msgBody: "yurrrr", msgError: true}
+							message: { msgBody: "Houston, we have a problem, ERROR", msgError: true}
 						});
 					}
 					return res.json({
