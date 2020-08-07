@@ -27,8 +27,7 @@ function Savings({
 			budgetedAmount: editEntry[`budgetedAmount${id}`],
 			actualAmount: editEntry[`actualAmount${id}`],
 		};
-
-		console.log(data);
+		
 		// Checks if the field is empty, if its not, then we will run the function
 		if (data.budgetedAmount || data.actualAmount) {
 			axios.post("/api/savings/editSavings", data).then((response) => {

@@ -96,6 +96,7 @@ canvas {
 .header-area {
 	margin-bottom: 30px;
 	overflow-wrap: break-word;
+	word-break: break-all;
 }
 
 .header-area > h2 {

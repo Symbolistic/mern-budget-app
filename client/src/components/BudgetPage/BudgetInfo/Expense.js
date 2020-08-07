@@ -91,6 +91,7 @@ function Expense({
 
 		axios.post("/api/expense/addExpenseEntry", data).then((response) => {
 			if (response.data.success) {
+				setNewEntry({});
 				fetchBudget();
 			} else {
 				console.log("Failed to add to expenses");

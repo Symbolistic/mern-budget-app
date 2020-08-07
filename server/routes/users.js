@@ -11,6 +11,8 @@ const mailgun = require("mailgun-js");
 const DOMAIN = "sandboxa6584999d9bd426a84d3dc2c17dacab9.mailgun.org";
 const mg = mailgun({ apiKey: config.MAILGUN_APIKEY, domain: DOMAIN });
 
+const nodemailer = require("nodemailer");
+
 //=================================
 //             User
 //=================================
@@ -127,6 +129,15 @@ router.put("/forgot-password", (req, res) => {
 		const token = JWT.sign({ _id: user._id }, config.RESET_PASSWORD_KEY, {
 			expiresIn: "20m",
 		});
+
+		let transporter = nodemailer.createTransport({
+			service: "gmail",
+			auth: {
+				user: config.NODEMAIL_USER,
+				pass: config.NODEMAIL_PASS
+			}
+		})
+
 		const data = {
 			from: "noreply@budget.com",
 			to: email,
@@ -145,10 +156,11 @@ router.put("/forgot-password", (req, res) => {
 						message: { msgBody: "Reset Password Link Error", msgError: true },
 					});
 			} else {
-				mg.messages().send(data, function (error, body) {
+				transporter.sendMail(data, function (error, body) {
 					if (error) {
-						return res.json({
-							message: { msgBody: error, msgError: true}
+						console.log(error)
+						return res.status(500).json({
+							message: { msgBody: "yurrrr", msgError: true}
 						});
 					}
 					return res.json({

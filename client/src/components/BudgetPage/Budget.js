@@ -131,7 +131,7 @@ const Budget = () => {
 		}
 	};
 
-	const combineExpenseGroupsAndEntries = async (groups, entries) => {
+	const combineExpenseGroupsAndEntries = (groups, entries) => {
 		const expenseGroups = groups.map((val) => {
 			val.expenseEntries = [];
 			return val;
@@ -228,12 +228,11 @@ const Budget = () => {
 			combineIncomeGroupsAndEntries(incomeResponse.data.groups, incomeResponse.data.entries);
 
 			// Savings
-			const totalSavings = await calculateSavings(savingsResponse.data.groups);
+			const totalSavings = calculateSavings(savingsResponse.data.groups);
 			setSavings(savingsResponse.data.groups);
 
 			// Expense
-			const expenseGroups = await combineExpenseGroupsAndEntries(expenseResponse.data.groups, expenseResponse.data.entries);
-			
+			const expenseGroups = combineExpenseGroupsAndEntries(expenseResponse.data.groups, expenseResponse.data.entries);
 			
 			grabChartData(expenseGroups, totalSavings);
 
