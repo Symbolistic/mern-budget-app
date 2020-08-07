@@ -23,7 +23,7 @@ app.use('/api/budget', require('./routes/budget'));
 app.use('/api/income', require('./routes/income'));
 app.use('/api/savings', require('./routes/savings'));
 app.use('/api/expense', require('./routes/expense'));
-
+console.log(process.env.NODE_ENV)
 if (process.env.NODE_ENV === "production") {
     // Set static folder 
     app.use(express.static("client/build"));
