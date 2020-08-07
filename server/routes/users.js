@@ -13,9 +13,9 @@ const config = require("../config/key");
 
 const nodemailer = require("nodemailer");
 
-//==================================
+//=================================
 //             User
-//==================================
+//=================================
 
 const signToken = (userID) => {
 	return JWT.sign(
