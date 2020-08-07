@@ -9,7 +9,8 @@ const passportConfig = require("../middleware/passport"); // This is needed for 
 
 
 const nodemailer = require("nodemailer");
-
+const { google } = require("googleapis");
+const OAuth2 = google.auth.OAuth2;
 
 //=================================
 //             User
@@ -128,13 +129,42 @@ router.put("/forgot-password", (req, res) => {
 			expiresIn: "20m",
 		});
 
-		let transporter = nodemailer.createTransport({
+		// Oauth for gmail
+		const oauth2Client = new OAuth2(
+			process.env.CLIENT_ID, //ClientID
+			process.env.CLIENT_SECRET, // Client Secret
+			"https://developers.google.com/oauthplayground" // Redirect URL
+	   );
+
+	   // Refresh token for google oauth
+	   oauth2Client.setCredentials({
+			refresh_token: process.env.REFRESH_TOKEN
+		});
+		const accessToken = oauth2Client.getAccessToken()
+
+		// Mailer info
+
+		// NEW
+		const transporter = nodemailer.createTransport({
 			service: "gmail",
 			auth: {
-				user: process.env.NODEMAIL_USER,
-				pass: process.env.NODEMAIL_PASS
+				 type: "OAuth2",
+				 user: process.env.NODEMAIL_USER, 
+				 clientId: process.env.CLIENT_ID,
+				 clientSecret: process.env.CLIENT_SECRET,
+				 refreshToken: process.env.REFRESH_TOKEN,
+				 accessToken: accessToken
 			}
-		})
+	   });
+
+		// OLD
+		// let transporter = nodemailer.createTransport({
+		// 	service: "gmail",
+		// 	auth: {
+		// 		user: process.env.NODEMAIL_USER,
+		// 		pass: process.env.NODEMAIL_PASS
+		// 	}
+		// })
 
 
 		const data = {
@@ -158,6 +188,7 @@ router.put("/forgot-password", (req, res) => {
 				transporter.sendMail(data, function (error, body) {
 					if (error) {
 						console.log(error)
+						transporter.close();
 						return res.status(500).json({
 							message: { msgBody: "Houston, we have a problem, ERROR", msgError: true}
 						});
