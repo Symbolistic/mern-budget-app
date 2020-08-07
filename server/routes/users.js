@@ -157,6 +157,7 @@ router.put("/forgot-password", (req, res) => {
 			} else {
 				transporter.sendMail(data, function (error, body) {
 					if (error) {
+						console.log(error)
 						return res.status(500).json({
 							message: { msgBody: "Houston, we have a problem, ERROR", msgError: true}
 						});
