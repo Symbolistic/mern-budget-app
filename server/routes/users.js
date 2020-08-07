@@ -5,9 +5,18 @@ const JWT = require("jsonwebtoken");
 const { User } = require("../models/User");
 const passportConfig = require("../middleware/passport"); // This is needed for the middleware
 
-const config = require("../config/key");
+//const config = require("../config/key");
 
 
+const nodemailer = require("nodemailer");
+
+let transporter = nodemailer.createTransport({
+	service: "gmail",
+	auth: {
+		user: process.env.NODEMAIL_USER,
+		pass: process.env.NODEMAIL_PASS
+	}
+})
 
 //=================================
 //             User
@@ -122,7 +131,7 @@ router.put("/forgot-password", (req, res) => {
 				.json({ message: { msgBody: "Email not found", msgError: true } });
 		}
 
-		const token = JWT.sign({ _id: user._id }, config.RESET_PASSWORD_KEY, {
+		const token = JWT.sign({ _id: user._id }, process.env.RESET_PASSWORD_KEY, {
 			expiresIn: "20m",
 		});
 
@@ -133,7 +142,7 @@ router.put("/forgot-password", (req, res) => {
 			subject: "Password Reset Link",
 			html: `
                 <h2>Please click on the given link to reset your password</h2>
-                <p>${config.CLIENT_URL}/reset/${token}</p>
+                <p>${process.env.CLIENT_URL}/reset/${token}</p>
             `,
 		};
 
@@ -145,7 +154,16 @@ router.put("/forgot-password", (req, res) => {
 						message: { msgBody: "Reset Password Link Error", msgError: true },
 					});
 			} else {
-
+				transporter.sendMail(data, function (error, body) {
+					if (error) {
+						return res.status(500).json({
+							message: { msgBody: "Houston, we have a problem, ERROR", msgError: true}
+						});
+					}
+					return res.json({
+						message: { msgBody: "Password Reset has been emailed to you", msgError: false },
+					});
+				});
 			}
 		});
 	});

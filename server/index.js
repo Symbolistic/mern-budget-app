@@ -5,9 +5,10 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const path = require('path');
 
-const config = require("./config/key");
+require("dotenv").config();
+//const config = require("./config/key");
 
-mongoose.connect(config.mongoURI,
+mongoose.connect(process.env.mongoURI,
                  { useNewUrlParser:true, useUnifiedTopology: true, useCreateIndex: true }).then(() => console.log("Connected to Database"))
                                                                     .catch(err => console.log(err));
 
