@@ -7,11 +7,16 @@ const passportConfig = require("../middleware/passport"); // This is needed for 
 
 const config = require("../config/key");
 
-// const mailgun = require("mailgun-js");
-// const DOMAIN = "sandboxa6584999d9bd426a84d3dc2c17dacab9.mailgun.org";
-// const mg = mailgun({ apiKey: config.MAILGUN_APIKEY, domain: DOMAIN });
 
 const nodemailer = require("nodemailer");
+
+let transporter = nodemailer.createTransport({
+	service: "gmail",
+	auth: {
+		user: config.NODEMAIL_USER,
+		pass: config.NODEMAIL_PASS
+	}
+})
 
 //=================================
 //             User
@@ -130,13 +135,6 @@ router.put("/forgot-password", (req, res) => {
 			expiresIn: "20m",
 		});
 
-		let transporter = nodemailer.createTransport({
-			service: "gmail",
-			auth: {
-				user: config.NODEMAIL_USER,
-				pass: config.NODEMAIL_PASS
-			}
-		})
 
 		const data = {
 			from: "noreply@budget.com",
@@ -158,7 +156,6 @@ router.put("/forgot-password", (req, res) => {
 			} else {
 				transporter.sendMail(data, function (error, body) {
 					if (error) {
-						console.log(error)
 						return res.status(500).json({
 							message: { msgBody: "Houston, we have a problem, ERROR", msgError: true}
 						});
