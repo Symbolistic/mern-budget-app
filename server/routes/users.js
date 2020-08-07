@@ -7,9 +7,9 @@ const passportConfig = require("../middleware/passport"); // This is needed for 
 
 const config = require("../config/key");
 
-const mailgun = require("mailgun-js");
-const DOMAIN = "sandboxa6584999d9bd426a84d3dc2c17dacab9.mailgun.org";
-const mg = mailgun({ apiKey: config.MAILGUN_APIKEY, domain: DOMAIN });
+// const mailgun = require("mailgun-js");
+// const DOMAIN = "sandboxa6584999d9bd426a84d3dc2c17dacab9.mailgun.org";
+// const mg = mailgun({ apiKey: config.MAILGUN_APIKEY, domain: DOMAIN });
 
 const nodemailer = require("nodemailer");
 
