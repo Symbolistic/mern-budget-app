@@ -218,6 +218,7 @@ const Budget = () => {
 		// 	}
 		// });
 
+		
 		try {
 
 			const incomeResponse = await axios.post("/api/income/getIncome", variables);
