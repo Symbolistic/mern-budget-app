@@ -148,7 +148,7 @@ router.put("/forgot-password", (req, res) => {
 				mg.messages().send(data, function (error, body) {
 					if (error) {
 						return res.json({
-							error: err.message,
+							message: { msgBody: error, msgError: true}
 						});
 					}
 					return res.json({
