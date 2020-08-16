@@ -41,10 +41,17 @@ function Expense({
 		const data = {
 			expenseEntryID: expenseEntryID,
 			editDescription: editEntry[`description${expenseEntryID}`],
-			editAmount: editEntry[`amount${expenseEntryID}`],
+			editBudget: editEntry[`budgetedAmount${expenseEntryID}`],
+			editSpent: editEntry[`spentAmount${expenseEntryID}`]
 		};
 
-		if (data.editDescription || data.editAmount) {
+		console.log(data)
+		// This is a check to see if someone is putting too high a value, if its true, set to 1 cent
+		if (data.editAmount > 999999999999999999) {
+			data.editAmount = 0.01;
+		}
+
+		if (data.editDescription || data.editBudget || data.editSpent) {
 			axios.post("/api/expense/editExpenseEntry", data).then((response) => {
 				if (response.data.success) {
 					// Sets editing to false so we get rid of the input field and display data again
@@ -89,9 +96,13 @@ function Expense({
 			budgetedAmount: newEntry[id + "budgetedAmount"],
 		};
 
+		// This is a check to see if someone is putting too high a value, if its true, set to 1 cent
+		if (data.budgetedAmount > 999999999999999999) {
+			data.budgetedAmount = 0.1;
+		}
+
 		axios.post("/api/expense/addExpenseEntry", data).then((response) => {
 			if (response.data.success) {
-				setNewEntry({});
 				fetchBudget();
 			} else {
 				console.log("Failed to add to expenses");
@@ -198,17 +209,17 @@ function Expense({
 												{currentlyEditing[expenseEntry._id] === true ? (
 													<input
 														className="edit-input"
-														name={`actualAmount${expenseEntry._id}`}
+														name={`spentAmount${expenseEntry._id}`}
 														maxLength="30"
 														onChange={handleExpenseEdit}
 														value={
-															editEntry[`actualAmount${expenseEntry._id}`]
-																? editEntry[`actualAmount${expenseEntry._id}`]
-																: expenseEntry.actualAmount
+															editEntry[`spentAmount${expenseEntry._id}`]
+																? editEntry[`spentAmount${expenseEntry._id}`]
+																: expenseEntry.spentAmount
 														}
 													/>
 												) : (
-													expenseEntry.actualAmount
+													expenseEntry.spentAmount
 												)}
 											</li>
 											<li className="flex-item flex4">
@@ -250,7 +261,7 @@ function Expense({
 										<div className="entry-price">
 											<input
 												className="entry-data"
-												type="text"
+												type="number"
 												name={category._id + "budgetedAmount"}
 												maxLength="30"
 												onChange={handleChange}

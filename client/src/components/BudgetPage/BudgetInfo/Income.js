@@ -43,6 +43,11 @@ function Income({
 			editAmount: editEntry[`amount${id}`],
 		};
 
+		// This is a check to see if someone is putting too high a value, if its true, set to 1 cent
+		if (data.editAmount > 999999999999999999) {
+			data.editAmount = 0.01;
+		}
+
 		if (data.editDescription || data.editAmount) {
 			axios.post("/api/income/editIncomeEntry", data).then((response) => {
 				if (response.data.success) {
@@ -103,6 +108,11 @@ function Income({
 			description: newEntry[id],
 			amount: newEntry[id + "budgetedAmount"],
 		};
+
+		// This is a check to see if someone is putting too high a value, if its true, set to 1 cent
+		if (data.amount > 999999999999999999) {
+			data.amount = 0.1;
+		}
 
 		axios.post("/api/income/addIncomeEntry", data).then((response) => {
 			if (response.data.success) {
@@ -174,6 +184,7 @@ function Income({
 											<li className="flex-item flex2">
 												{currentlyEditing[incomeEntry._id] === true ? (
 													<input
+														type="number"
 														className="edit-input"
 														name={`amount${incomeEntry._id}`}
 														maxLength="30"

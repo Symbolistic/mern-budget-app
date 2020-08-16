@@ -9,7 +9,7 @@ const expenseEntrySchema = mongoose.Schema({
 	},
 	description: { type: String, required: true },
 	budgetedAmount: { type: Number, default: 0 },
-	actualAmount: { type: Number, default: 0 },
+	spentAmount: { type: Number, default: 0 },
 });
 
 const ExpenseEntry = mongoose.model("ExpenseEntry", expenseEntrySchema);

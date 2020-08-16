@@ -26,25 +26,38 @@
 	padding: 5px;
 }
 
-#chart-data {
+.radio {
+	padding-right: 15px;
+}
+
+#charts-container {
 	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-	gap: 10px;
 	background-color: #ffffff;
 	margin: 30px 0;
 	border-radius: 0.25rem;
 	padding: 15px;
 	text-align: center;
 	box-shadow: .3em 0.5em 1.3em rgba(31,36,38,0.05);
+	gap: 10px;
+}
+
+#chart-data {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+	gap: 10px;
 }
 
 #doughnut-chart-container {
 	border-right: 1px dashed black;
+	min-height: 300px;
+	max-height: 500px;
 	height: 100%;
 }
 
 #bar-chart-container {
-	height: 100%;
+	min-height: 300px;
+	max-height: 500px;
+	height:100%;
 }
 
 canvas {

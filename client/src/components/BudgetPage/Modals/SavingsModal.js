@@ -29,6 +29,16 @@ const SavingsModal = (props) => {
 		};
 		console.log(data);
 
+		// This is a check to see if someone is putting too high a value, if its true, set to 1 cent
+		if (data.budgetedAmount > 999999999999999999) {
+			data.budgetedAmount = 0.01;
+		}
+
+		// This is a check to see if someone is putting too high a value, if its true, set to 1 cent
+		if (data.actualAmount > 999999999999999999) {
+			data.actualAmount = 0.01;
+		}
+
 		if (data.categoryType === "cancel") {
 			setNewCategory({});
 			props.setSavingsModalDisplay(false);
