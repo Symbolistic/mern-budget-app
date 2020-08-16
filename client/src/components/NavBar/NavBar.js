@@ -19,6 +19,12 @@ function NavBar(props) {
     const unauthenticatedNavBar = () => {
         return (
             <>
+                <Link to="/howitworks">
+                    <li className="nav-item nav-link">
+                        How It Works
+                    </li>
+                </Link>
+
                 <Link to="/login">
                     <li className="nav-item nav-link">
                         Login
@@ -36,6 +42,11 @@ function NavBar(props) {
     const authenticatedNavBar = () => {
         return (
             <>
+                <Link to="/howitworks">
+                    <li className="nav-item nav-link">
+                        How It Works
+                    </li>
+                </Link>
 
                 <Link to="/budget">
                     <li className="nav-item nav-link">
@@ -52,7 +63,7 @@ function NavBar(props) {
         <div className="nav-container">
             <Link to='/'>
                 <div className="app-name">
-                    <h2>Budget</h2>
+                    <h2>Lucid Budget</h2>
                 </div>
             </Link>
             

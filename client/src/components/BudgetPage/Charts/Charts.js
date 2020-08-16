@@ -1,15 +1,16 @@
-import React, { useState } from "react";
+import React from "react";
 import { Bar, Doughnut } from "react-chartjs-2";
 
 function Charts({
     totalBudgetExpense,
-    totalSpentExpense,
+    totalActualExpense,
 	totalIncome,
 	groupNames,
     groupTotalBudgetExpenses,
-    totalSpentExpenses,
+    totalActualExpenses,
+    selectedOption,
+    setSelectedOption,
 }) {
-	const [selectedOption, setSelectedOption] = useState("Budget");
 
 	const barData = {
 		labels: ["Expenses", "Income"],
@@ -23,7 +24,7 @@ function Charts({
                 ]
                 :
                 [
-					parseFloat(totalSpentExpense.replace(/,/g, "")),
+					parseFloat(totalActualExpense.replace(/,/g, "")),
 					parseFloat(totalIncome.replace(/,/g, "")),
                 ],
 				borderColor: ["rgb(153, 102, 255)", "rgb(133,187,101)"],
@@ -59,7 +60,7 @@ function Charts({
 			{
 				label: "Monthly Expenses",
 				barThickness: 100,
-				data: selectedOption === "Budget" ? [...groupTotalBudgetExpenses] : [...totalSpentExpenses],
+				data: selectedOption === "Budget" ? [...groupTotalBudgetExpenses] : [...totalActualExpenses],
 				borderColor: [
 					"rgb(153, 102, 255)",
 					"rgb(133,187,101)",
@@ -199,7 +200,7 @@ function Charts({
 						checked={selectedOption === "Spent"}
 						onChange={(e) => setSelectedOption(e.target.value)}
 					/>{" "}
-					Spent
+					Actual
 				</label>
 			</div>
 

@@ -43,7 +43,7 @@ const Budget = () => {
 	const [totalActualSavings, setTotalActualSavings] = useState("0");
 
 	const [totalBudgetExpense, setTotalBudgetExpense] = useState("0");
-	const [totalSpentExpense, setTotalSpentExpense] = useState("0");
+	const [totalActualExpense, setTotalActualExpense] = useState("0");
 
 	// Handles editing of data
 	const [editEntry, setEditEntry] = useState({});
@@ -57,7 +57,10 @@ const Budget = () => {
 	// This data is for the pie chart
 	const [groupNames, setGroupNames] = useState([]);
 	const [groupTotalBudgetExpenses, setGroupTotalBudgetExpenses] = useState([]);
-	const [totalSpentExpenses, setTotalSpentExpenses] = useState([]);
+	const [totalActualExpenses, setTotalActualExpenses] = useState([]);
+
+	// This controls the radio button to show budget and spent
+	const [selectedOption, setSelectedOption] = useState("Budget");
     
     // This is to prevent double clicking
     const [disabled, setDisabled] = useState(false);
@@ -151,20 +154,20 @@ const Budget = () => {
 		}
 	};
 
-	const calculateSpentExpense = (expense) => {
+	const calculateActualExpense = (expense) => {
 		if (expense) {
-			const totalSpentExpense = expense.reduce((acc, currVal) => {
+			const totalActualExpense = expense.reduce((acc, currVal) => {
 				// Get the total sum of this categories expense entries
 				const entriesTotal = currVal.expenseEntries.reduce(
 					(accEntries, currEntry) => {
-						return accEntries + currEntry.spentAmount;
+						return accEntries + currEntry.actualAmount;
 					},
 					0
 				);
 				return acc + entriesTotal;
 			}, 0);
-			setTotalSpentExpense(
-				totalSpentExpense.toLocaleString(undefined, {
+			setTotalActualExpense(
+				totalActualExpense.toLocaleString(undefined, {
 					minimumFractionDigits: 2,
 					maximumFractionDigits: 2,
 				})
@@ -188,7 +191,7 @@ const Budget = () => {
 		
 		setExpense(expenseGroups);
 		calculateBudgetExpense(expenseGroups);
-		calculateSpentExpense(expenseGroups);
+		calculateActualExpense(expenseGroups);
 		return expenseGroups;
 	};
 
@@ -220,16 +223,16 @@ const Budget = () => {
 			}, 0);
 		});
 		
-		const totalSpentExpenses = expenseGroups.map((group) => {
+		const totalActualExpenses = expenseGroups.map((group) => {
 			return group.expenseEntries.reduce((accEntries, currEntry) => {
-				return accEntries + currEntry.spentAmount;
+				return accEntries + currEntry.actualAmount;
 			}, 0);
 		});
 
 		// After collecting the data and calculating it up, pass it to state
 		setGroupNames(["Savings", ...groupNames]);
 		setGroupTotalBudgetExpenses([totalBudgetSavings, ...groupTotalBudgetExpenses]);
-		setTotalSpentExpenses([totalActualSavings, ...totalSpentExpenses]);
+		setTotalActualExpenses([totalActualSavings, ...totalActualExpenses]);
 	};
 
 	const fetchBudget = async () => {
@@ -328,16 +331,19 @@ const Budget = () => {
 				</div>
 
 				<Charts
+					selectedOption={selectedOption}
+					setSelectedOption={setSelectedOption}
 					totalBudgetExpense={totalBudgetExpense}
-					totalSpentExpense={totalSpentExpense}
+					totalActualExpense={totalActualExpense}
 					totalIncome={totalIncome}
 					totalBudgetSavings={totalBudgetSavings}
 					groupNames={groupNames}
 					groupTotalBudgetExpenses={groupTotalBudgetExpenses}
-					totalSpentExpenses={totalSpentExpenses}
+					totalActualExpenses={totalActualExpenses}
 				/>
 
 				<Income
+					selectedOption={selectedOption}
 					setIncomeModalDisplay={setIncomeModalDisplay}
 					fetchBudget={fetchBudget}
 					income={income}
@@ -354,9 +360,12 @@ const Budget = () => {
 				/>
 
 				<Savings
+					selectedOption={selectedOption}
 					setSavingsModalDisplay={setSavingsModalDisplay}
 					fetchBudget={fetchBudget}
 					savings={savings}
+					totalBudgetSavings={totalBudgetSavings}
+					totalActualSavings={totalActualSavings}
 					calculateIncome={calculateIncome}
 					setBudget={setBudget}
 					variables={variables}
@@ -368,11 +377,13 @@ const Budget = () => {
 				/>
 
 				<Expense
+					selectedOption={selectedOption}
 					setExpenseModalDisplay={setExpenseModalDisplay}
 					budget={budget}
 					fetchBudget={fetchBudget}
 					expense={expense}
 					totalBudgetExpense={totalBudgetExpense}
+					totalActualExpense={totalActualExpense}
 					calculateIncome={calculateIncome}
 					setBudget={setBudget}
 					variables={variables}

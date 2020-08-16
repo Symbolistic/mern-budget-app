@@ -40,7 +40,7 @@ function Income({
 		const data = {
 			incomeEntryID: id,
 			editDescription: editEntry[`description${id}`],
-			editAmount: editEntry[`amount${id}`],
+			editAmount: editEntry[`amount${id}`]
 		};
 
 		// This is a check to see if someone is putting too high a value, if its true, set to 1 cent

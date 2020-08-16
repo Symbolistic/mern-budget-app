@@ -9,6 +9,7 @@ const incomeEntrySchema = mongoose.Schema({
 	},
 	description: { type: String, required: true },
 	amount: { type: Number, required: true },
+	actual: { type: Number, default: 0 }
 });
 
 const IncomeEntry = mongoose.model("IncomeEntry", incomeEntrySchema);

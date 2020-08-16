@@ -39,12 +39,23 @@ router.post("/createBudget", passport.authenticate("jwt", {session: false}), (re
         budgetedAmount: 0,
         actualAmount: 0,
     });
+
+    // Save income in the database
+	income.save((err, doc) => {
+		if (err) return res.json({ success: false, err });
+		return res.status(200).json({ success: true, doc });
+    });
+
+    // Save everything in the database
+	savings.save((err, doc) => {
+		if (err) return res.json({ success: false, err });
+	});
     
     // List of expense group names
-    const names = ["Housing", "Transportation", "Foods", "Subscriptions", "Lifestyle", "Miscellaneous"]
+    const names = ["Utilities", "Transportation", "Foods", "Subscriptions", "Lifestyle", "Credit Card Payment", "Miscellaneous"]
 
-    names.map(name => {
-        const expense = new ExpenseGroup({
+    names.map(async name => {
+        const expense = await new ExpenseGroup({
             userFrom: userFrom,
             budgetType: budgetType,
             month: month,
@@ -53,21 +64,10 @@ router.post("/createBudget", passport.authenticate("jwt", {session: false}), (re
         });
     
         // Save everything in the database
-        expense.save((err, doc) => {
+        await expense.save((err, doc) => {
             if (err) return res.json({ success: false, err });
         });
     })
-
-	// Save everything in the database
-	savings.save((err, doc) => {
-		if (err) return res.json({ success: false, err });
-	});
-
-	// Save income in the database
-	income.save((err, doc) => {
-		if (err) return res.json({ success: false, err });
-		return res.status(200).json({ success: true, doc });
-    });
 });
 
 

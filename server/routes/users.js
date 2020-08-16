@@ -104,6 +104,8 @@ router.post(
 					isAuthenticated: true,
 					user: { userFrom: _id, name, email, role },
 				});
+		} else {
+			res.status(500).json({ message: { msgBody: "Incorrect Credentials", msgError: true } })
 		}
 	}
 );
@@ -156,15 +158,6 @@ router.put("/forgot-password", (req, res) => {
 				 accessToken: accessToken
 			}
 	   });
-
-		// OLD
-		// let transporter = nodemailer.createTransport({
-		// 	service: "gmail",
-		// 	auth: {
-		// 		user: process.env.NODEMAIL_USER,
-		// 		pass: process.env.NODEMAIL_PASS
-		// 	}
-		// })
 
 
 		const data = {

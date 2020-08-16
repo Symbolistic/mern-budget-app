@@ -109,7 +109,6 @@ canvas {
 .header-area {
 	margin-bottom: 30px;
 	overflow-wrap: break-word;
-	word-break: break-all;
 }
 
 .header-area > h2 {
@@ -140,9 +139,9 @@ canvas {
 }
 
 .data-wrapper {
-	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-	gap:30px;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 50px;
 	text-align: center;
 	margin-top: 20px;
 }
@@ -276,7 +275,8 @@ form {
 
 	display: flex;
 	flex-direction:row;
-	min-width: 320px;
+	min-width: 340px;
+	max-width: 340px;
 	border-bottom: 1px solid #dddddd;
 	border-radius: 5px 5px 0 0;
   }
@@ -297,7 +297,7 @@ form {
   
   .flex1 { flex: 1 1 20em; min-width: 10px; }
   .flex2 { flex: 2 2 20em; min-width: 90px; }
-  .flex3 { flex: 3 3 20em; min-width: 60px; }
+  .flex3 { flex: 3 3 20em; min-width: 70px; }
   .flex4 { flex: 4 4 20em; min-width: 35px; }
   .flex5 { flex: 5 5 20em; min-width: 35px;}
 

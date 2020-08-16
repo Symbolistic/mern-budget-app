@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 import AuthService from "../Services/AuthService";
 import Message from "../Message";
 import "./RegisterLogin.css";

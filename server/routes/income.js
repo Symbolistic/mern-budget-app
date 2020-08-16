@@ -71,11 +71,11 @@ router.post("/addIncomeEntry", passport.authenticate("jwt", {session: false}), (
 });
 
 router.post("/editIncomeEntry", passport.authenticate("jwt", {session: false}), (req, res) => {
-	const { incomeEntryID, editDescription, editAmount } = req.body;
+	const { incomeEntryID, editDescription, editAmount, editActual } = req.body;
 
 	let params = {
         description: editDescription,
-        amount: editAmount
+		amount: editAmount,
 	};
 
     /* Find any null/undefined values and delete them so they wont get passed into the database and

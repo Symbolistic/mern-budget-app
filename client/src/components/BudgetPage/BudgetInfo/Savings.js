@@ -7,16 +7,19 @@ function Savings({
 	setSavingsModalDisplay,
 	savings,
 	totalBudgetSavings,
+	totalActualSavings,
 	fetchBudget,
 	editEntry,
 	currentlyEditing,
 	setCurrentlyEditing,
 	setEditEntry,
+	selectedOption
 }) {
 	const handleSavingsEdit = (event) => {
 		const { name, value } = event.target;
 
 		setEditEntry({
+			...editEntry,
 			[name]: value,
 		});
 	};
@@ -84,7 +87,7 @@ function Savings({
 	return (
 		<div id="income-container">
 			<div className="header-area">
-				<h2 className="budget-income-title">Total Savings: ${totalBudgetSavings}</h2>
+				<h2 className="budget-income-title">Total Savings: ${selectedOption === "Budget" ? totalBudgetSavings : totalActualSavings}</h2>
 				<button
 					className="addCategory"
 					name="incomeCategory"

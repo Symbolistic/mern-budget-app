@@ -10,11 +10,13 @@ function Expense({
 	fetchBudget,
 	expense,
 	totalBudgetExpense,
+	totalActualExpense,
 	variables,
 	editEntry,
 	currentlyEditing,
 	setCurrentlyEditing,
 	setEditEntry,
+	selectedOption
 }) {
 	const [newEntry, setNewEntry] = useState({});
 
@@ -42,16 +44,20 @@ function Expense({
 			expenseEntryID: expenseEntryID,
 			editDescription: editEntry[`description${expenseEntryID}`],
 			editBudget: editEntry[`budgetedAmount${expenseEntryID}`],
-			editSpent: editEntry[`spentAmount${expenseEntryID}`]
+			editActual: editEntry[`actualAmount${expenseEntryID}`]
 		};
 
 		console.log(data)
 		// This is a check to see if someone is putting too high a value, if its true, set to 1 cent
-		if (data.editAmount > 999999999999999999) {
-			data.editAmount = 0.01;
+		if (data.editBudget > 999999999999999999) {
+			data.editBudget = 0.01;
 		}
 
-		if (data.editDescription || data.editBudget || data.editSpent) {
+		if (data.editActual > 999999999999999999) {
+			data.editActual = 0.01;
+		}
+
+		if (data.editDescription || data.editBudget || data.editActual) {
 			axios.post("/api/expense/editExpenseEntry", data).then((response) => {
 				if (response.data.success) {
 					// Sets editing to false so we get rid of the input field and display data again
@@ -133,7 +139,7 @@ function Expense({
 	return (
 		<div id="expense-container">
 			<div className="header-area">
-				<h2>Total Expenses: ${totalBudgetExpense}</h2>
+				<h2>Total Expenses: ${selectedOption === "Budget" ? totalBudgetExpense : totalActualExpense}</h2>
 				<button
 					className="addCategory"
 					name="expenseCategory"
@@ -163,7 +169,7 @@ function Expense({
 								<div id="entries-data">
 									<ul className="row table-header">
 										<li className="flex-item flex1">Description</li>
-										<li className="flex-item flex2">Amount</li>
+										<li className="flex-item flex2">Budgeted</li>
 										<li className="flex-item flex3">Actual</li>
 										<li className="flex-item flex4"></li>
 										<li className="flex-item flex5"></li>
@@ -209,17 +215,17 @@ function Expense({
 												{currentlyEditing[expenseEntry._id] === true ? (
 													<input
 														className="edit-input"
-														name={`spentAmount${expenseEntry._id}`}
+														name={`actualAmount${expenseEntry._id}`}
 														maxLength="30"
 														onChange={handleExpenseEdit}
 														value={
-															editEntry[`spentAmount${expenseEntry._id}`]
-																? editEntry[`spentAmount${expenseEntry._id}`]
+															editEntry[`actualAmount${expenseEntry._id}`]
+																? editEntry[`actualAmount${expenseEntry._id}`]
 																: expenseEntry.spentAmount
 														}
 													/>
 												) : (
-													expenseEntry.spentAmount
+													expenseEntry.actualAmount
 												)}
 											</li>
 											<li className="flex-item flex4">
