@@ -41,7 +41,9 @@ const Budget = () => {
 	const [totalIncome, setTotalIncome] = useState("0");
 	const [totalBudgetSavings, setTotalBudgetSavings] = useState("0");
 	const [totalActualSavings, setTotalActualSavings] = useState("0");
-	const [totalExpense, setTotalExpense] = useState("0");
+
+	const [totalBudgetExpense, setTotalBudgetExpense] = useState("0");
+	const [totalSpentExpense, setTotalSpentExpense] = useState("0");
 
 	// Handles editing of data
 	const [editEntry, setEditEntry] = useState({});
@@ -128,9 +130,9 @@ const Budget = () => {
 		}
 	};
 
-	const calculateExpense = (expense) => {
+	const calculateBudgetExpense = (expense) => {
 		if (expense) {
-			const totalExpense = expense.reduce((acc, currVal) => {
+			const totalBudgetExpense = expense.reduce((acc, currVal) => {
 				// Get the total sum of this categories expense entries
 				const entriesTotal = currVal.expenseEntries.reduce(
 					(accEntries, currEntry) => {
@@ -140,8 +142,29 @@ const Budget = () => {
 				);
 				return acc + entriesTotal;
 			}, 0);
-			setTotalExpense(
-				totalExpense.toLocaleString(undefined, {
+			setTotalBudgetExpense(
+				totalBudgetExpense.toLocaleString(undefined, {
+					minimumFractionDigits: 2,
+					maximumFractionDigits: 2,
+				})
+			);
+		}
+	};
+
+	const calculateSpentExpense = (expense) => {
+		if (expense) {
+			const totalSpentExpense = expense.reduce((acc, currVal) => {
+				// Get the total sum of this categories expense entries
+				const entriesTotal = currVal.expenseEntries.reduce(
+					(accEntries, currEntry) => {
+						return accEntries + currEntry.spentAmount;
+					},
+					0
+				);
+				return acc + entriesTotal;
+			}, 0);
+			setTotalSpentExpense(
+				totalSpentExpense.toLocaleString(undefined, {
 					minimumFractionDigits: 2,
 					maximumFractionDigits: 2,
 				})
@@ -164,7 +187,8 @@ const Budget = () => {
 
 		
 		setExpense(expenseGroups);
-		calculateExpense(expenseGroups);
+		calculateBudgetExpense(expenseGroups);
+		calculateSpentExpense(expenseGroups);
 		return expenseGroups;
 	};
 
@@ -304,7 +328,8 @@ const Budget = () => {
 				</div>
 
 				<Charts
-					totalExpense={totalExpense}
+					totalBudgetExpense={totalBudgetExpense}
+					totalSpentExpense={totalSpentExpense}
 					totalIncome={totalIncome}
 					totalBudgetSavings={totalBudgetSavings}
 					groupNames={groupNames}
@@ -318,7 +343,7 @@ const Budget = () => {
 					income={income}
 					totalIncome={totalIncome}
 					calculateIncome={calculateIncome}
-					calculateExpense={calculateExpense}
+					calculateBudgetExpense={calculateBudgetExpense}
 					setBudget={setBudget}
 					variables={variables}
 					editEntry={editEntry}
@@ -333,7 +358,6 @@ const Budget = () => {
 					fetchBudget={fetchBudget}
 					savings={savings}
 					calculateIncome={calculateIncome}
-					calculateExpense={calculateExpense}
 					setBudget={setBudget}
 					variables={variables}
 					editEntry={editEntry}
@@ -348,9 +372,8 @@ const Budget = () => {
 					budget={budget}
 					fetchBudget={fetchBudget}
 					expense={expense}
-					totalExpense={totalExpense}
+					totalBudgetExpense={totalBudgetExpense}
 					calculateIncome={calculateIncome}
-					calculateExpense={calculateExpense}
 					setBudget={setBudget}
 					variables={variables}
 					editEntry={editEntry}

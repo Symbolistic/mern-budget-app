@@ -9,7 +9,7 @@ function Expense({
 	setExpenseModalDisplay,
 	fetchBudget,
 	expense,
-	totalExpense,
+	totalBudgetExpense,
 	variables,
 	editEntry,
 	currentlyEditing,
@@ -98,7 +98,7 @@ function Expense({
 
 		// This is a check to see if someone is putting too high a value, if its true, set to 1 cent
 		if (data.budgetedAmount > 999999999999999999) {
-			data.budgetedAmount = 0.1;
+			data.budgetedAmount = 0.01;
 		}
 
 		axios.post("/api/expense/addExpenseEntry", data).then((response) => {
@@ -133,7 +133,7 @@ function Expense({
 	return (
 		<div id="expense-container">
 			<div className="header-area">
-				<h2>Total Expenses: ${totalExpense}</h2>
+				<h2>Total Expenses: ${totalBudgetExpense}</h2>
 				<button
 					className="addCategory"
 					name="expenseCategory"

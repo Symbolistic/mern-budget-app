@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { Bar, Doughnut } from "react-chartjs-2";
 
 function Charts({
-	totalExpense,
+    totalBudgetExpense,
+    totalSpentExpense,
 	totalIncome,
 	groupNames,
     groupTotalBudgetExpenses,
@@ -16,10 +17,15 @@ function Charts({
 			{
 				label: "Expenses vs Income",
 				barThickness: 70,
-				data: [
-					parseFloat(totalExpense.replace(/,/g, "")),
+				data: selectedOption === "Budget" ? [
+					parseFloat(totalBudgetExpense.replace(/,/g, "")),
 					parseFloat(totalIncome.replace(/,/g, "")),
-				],
+                ]
+                :
+                [
+					parseFloat(totalSpentExpense.replace(/,/g, "")),
+					parseFloat(totalIncome.replace(/,/g, "")),
+                ],
 				borderColor: ["rgb(153, 102, 255)", "rgb(133,187,101)"],
 				backgroundColor: ["rgba(153, 102, 255, 0.2)", "rgba(133,187,101, 0.2)"],
 				borderWidth: 1,
