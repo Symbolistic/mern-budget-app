@@ -46,8 +46,7 @@ function Expense({
 			editBudget: editEntry[`budgetedAmount${expenseEntryID}`],
 			editActual: editEntry[`actualAmount${expenseEntryID}`]
 		};
-
-		console.log(data)
+		
 		// This is a check to see if someone is putting too high a value, if its true, set to 1 cent
 		if (data.editBudget > 999999999999999999) {
 			data.editBudget = 0.01;
