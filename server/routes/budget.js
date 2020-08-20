@@ -13,7 +13,7 @@ const passport = require("passport");
 // //=================================
 
 
-router.post("/createBudget", passport.authenticate("jwt", {session: false}), (req, res) => {
+router.post("/createBudget", passport.authenticate("jwt", {session: false}), async (req, res) => {
 	const {
 		userFrom,
 		budgetType,
@@ -41,21 +41,21 @@ router.post("/createBudget", passport.authenticate("jwt", {session: false}), (re
     });
 
     // Save income in the database
-	income.save((err, doc) => {
+	await income.save((err, doc) => {
 		if (err) return res.json({ success: false, err });
 		return res.status(200).json({ success: true, doc });
     });
 
     // Save everything in the database
-	savings.save((err, doc) => {
+	await savings.save((err, doc) => {
 		if (err) return res.json({ success: false, err });
 	});
     
     // List of expense group names
     const names = ["Utilities", "Transportation", "Foods", "Subscriptions", "Lifestyle", "Credit Card Payment", "Miscellaneous"]
 
-    names.map(async name => {
-        const expense = await new ExpenseGroup({
+    await names.map(name => {
+        const expense = new ExpenseGroup({
             userFrom: userFrom,
             budgetType: budgetType,
             month: month,
@@ -64,8 +64,9 @@ router.post("/createBudget", passport.authenticate("jwt", {session: false}), (re
         });
     
         // Save everything in the database
-        await expense.save((err, doc) => {
+        expense.save((err, doc) => {
             if (err) return res.json({ success: false, err });
+            console.log(doc)
         });
     })
 });

@@ -15,7 +15,8 @@ const Login = (props) => {
     }
 
     const onSubmit = event => {
-        event.preventDefault();
+		event.preventDefault();
+		
         AuthService.login(user).then(data => {
             const { isAuthenticated, user, message } = data;
             if(isAuthenticated) {
@@ -26,7 +27,26 @@ const Login = (props) => {
             else 
                 setMessage(message);
         });
-    }
+	}
+	
+	const guestLogin = event => {
+		event.preventDefault();
+		const authData = {
+			username: "test",
+			password: "test123"
+		}
+
+        AuthService.login(authData).then(data => {
+            const { isAuthenticated, user, message } = data;
+            if(isAuthenticated) {
+                authContext.setUser(user);
+                authContext.setIsAuthenticated(isAuthenticated);
+                props.history.push('/budget');
+            }
+            else 
+                setMessage(message);
+        });
+	}
 
 	return (
 		<div className="register-login-page">
@@ -56,6 +76,10 @@ const Login = (props) => {
 
 				<button className="btn btn-lg btn-primary btn-block" type="submit">
 					Log in
+				</button>
+
+				<button className="btn-guest" onClick={guestLogin}>
+					Guest Login
 				</button>
 
                 <p className="message">Not registered? <a href="/register">Create an account</a></p>
