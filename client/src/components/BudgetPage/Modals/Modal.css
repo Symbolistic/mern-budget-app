@@ -1,34 +1,33 @@
-
 .modal {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    border: 1px solid black;
-    border-radius: 10px;
-    background-color: antiquewhite;
-    padding: 20px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 1px solid black;
+  border-radius: 10px;
+  background-color: antiquewhite;
+  padding: 20px;
 }
 
 .modal-header {
-    text-align: center;
+  text-align: center;
 }
 
 .modal-body {
-    height: 100%;
-    text-align: center;
+  height: 100%;
+  text-align: center;
 }
 
 .modal-body > form {
-    display: grid;
+  display: grid;
 }
 
 .modal-buttons {
-    display: flex;
-    justify-content: center;
-    margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
 }
 
 .hide {
-    display:none;
+  display: none;
 }
