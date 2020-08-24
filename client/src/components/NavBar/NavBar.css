@@ -17,38 +17,42 @@ a {
     cursor: pointer;
     border: none;
     font-size: 16px;
-    margin-right: 10px;
+    font-weight: bold;
+}
+
+.logout-btn:hover {
+    border-bottom: 1px solid #ffffff;
 }
 
 .nav-container {
     margin: 0 auto;
-    background: rgb(170,70,185);
-background: linear-gradient(90deg, rgba(170,70,185,1) 0%, rgba(138,28,163,1) 49%, rgba(92,12,203,1) 100%);
+    background: rgb(255,201,34);
+    background: linear-gradient(90deg, rgba(255,201,34,0.8) 0%, rgba(133,187,101,1) 47%, rgba(240,240,53,0.8) 89%);
     width: 100%; 
     display: flex;
     flex-wrap: wrap;
     color: #ffffff;
-    justify-content: space-between;
-}
-
-.app-name > h2 {
-    text-align: left;
-    color: #ffffff;
-    font-size: 28px;
-    font-weight: 400;
-    padding: 18px;
-    padding-top: 15px;
-    vertical-align: middle;
-    letter-spacing: 0.1em;
+    justify-content: center;
+    align-content: center;
+    position: relative;
+    z-index: 1;
+    height: 100%;
+    font-weight: bold;
 }
 
 .navbar-links {
     display: flex;
-    justify-content: flex-end;
+    flex-wrap: wrap;
+    justify-content: center;
     list-style-type: none;
+    margin-bottom: 5px;
 }
 
 .navbar-links li {
-    padding: 10px;
-    margin: 10px;
+    margin: 5px;
+    padding: 3px;
+}
+
+.navbar-links li:hover {
+    border-bottom: 1px solid white;
 }

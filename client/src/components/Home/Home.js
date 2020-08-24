@@ -1,14 +1,24 @@
-import React from 'react';
-import '../Home/Home.css';
+import React from "react";
+import "../Home/Home.css";
+import { Link } from "react-router-dom";
 
 function Home(props) {
-    return (
-        <div id="home-container">
-            <h1>Welcome!</h1>
-            <p>Welcome to Lucid Budget</p>
-            <p>This app is still in its early stages but is being designed for people who love budgeting and I will need the help and feedback of all of you to make this successful and a great app for anyone just getting into budgets or people who are experienced in it.</p>
-        </div>
-    );
+	return (
+		<div id="home-container">
+			<div id="header">
+				<div className="info">
+					<h1>Lucid Budget</h1>
+					<p>Its time to take control of your spending habits</p>
+				</div>
+
+				<div className="btns">
+                    <Link to="/howitworks">
+					    <button className="btn">Getting Started</button>
+				    </Link>
+				</div>
+			</div>
+		</div>
+	);
 }
 
 export default Home;
