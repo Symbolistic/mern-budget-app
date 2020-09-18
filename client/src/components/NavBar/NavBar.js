@@ -80,7 +80,7 @@ function NavBar(props) {
 	return (
 		<header id='navbar'>
 			<Container className='header-nav'>
-				<div className='logo'></div>
+				<div className='logo'>Lucid Budget</div>
 				<label htmlFor='hamburger'>
 					<i className='fas fa-bars'></i>
 				</label>

@@ -13,9 +13,25 @@
 	}
 
 	img {
-		margin-top: 60px;
+		margin-top: 55px;
 		height: 200px;
 		width: 400px;
+	}
+	.btn {
+		background-color: #ffffff;
+		font-family: $displayFont;
+		border: 1px solid $black;
+		padding: 10px 25px;
+		text-align: center;
+		font-size: 1rem;
+		text-decoration: none;
+		color: $black;
+		text-transform: uppercase;
+		transition: all 0.5s ease-in-out;
+		&:hover {
+			background: yellow;
+			color: $black;
+		}
 	}
 }
 @media only screen and (max-width: 500px) {

@@ -1,12 +1,12 @@
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700|PT+Sans:400,500,700|Rozha+One');
 
-@import 'Variables';
+@import './variables';
 @import './components/NavBar/NavBar';
 @import './components/Home/TopImg';
 @import './components/Home/About';
 @import './components/Home/GettingStarted';
 @import './components/Footer/Footer.scss';
-@import 'Global';
+@import './global';
 * {
 	margin: 0;
 	padding: 0;

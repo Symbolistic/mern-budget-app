@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Container } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import comingsoon from '../../assets/comingsoon.gif';
@@ -25,6 +26,11 @@ const GettingStarted = () => {
 					</Grid>
 					<Grid item xs={12} md={6} className='comingsoon'>
 						<img src={comingsoon} alt='coming soon' />
+					</Grid>
+					<Grid item xs={12} md={12}>
+						<Link className='btn' to='/howitworks'>
+							Learn More
+						</Link>
 					</Grid>
 				</Grid>
 			</Container>
