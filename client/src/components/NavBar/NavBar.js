@@ -1,80 +1,97 @@
-import React, { useContext } from "react";
-import { Link } from "react-router-dom";
-import AuthService from "../Services/AuthService";
-import { AuthContext } from "../Context/AuthContext";
-import "./NavBar.css";
+import React, { useContext, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import AuthService from '../Services/AuthService';
+import { AuthContext } from '../Context/AuthContext';
+import { Container } from '@material-ui/core';
 
 function NavBar(props) {
-  const { isAuthenticated, setIsAuthenticated, setUser } = useContext(
-    AuthContext
-  );
+	const { isAuthenticated, setIsAuthenticated, setUser } = useContext(
+		AuthContext
+	);
 
-  const onClickLogoutHandler = () => {
-    AuthService.logout().then((data) => {
-      if (data.success) {
-        setUser(data.user);
-        setIsAuthenticated(false);
-      }
-    });
-  };
+	const location = useLocation();
 
-  const unauthenticatedNavBar = () => {
-    return (
-      <>
-        <Link to="/">
-          <li className="nav-item nav-link">Home</li>
-        </Link>
+	useEffect(() => {
+		console.log(location.pathname);
 
-        <Link to="/howitworks">
-          <li className="nav-item nav-link">Guide</li>
-        </Link>
+		if (location.pathname === '/') {
+			document
+				.getElementById('navbar')
+				.setAttribute('style', 'background: none');
+		} else {
+			document
+				.getElementById('navbar')
+				.setAttribute('style', 'position: relative');
+		}
+	}, [location]);
 
-        <Link to="/login">
-          <li className="nav-item nav-link">Login</li>
-        </Link>
-        <Link to="/register">
-          <li className="nav-item nav-link">Register</li>
-        </Link>
-      </>
-    );
-  };
+	const onClickLogoutHandler = () => {
+		AuthService.logout().then((data) => {
+			if (data.success) {
+				setUser(data.user);
+				setIsAuthenticated(false);
+			}
+		});
+	};
 
-  const authenticatedNavBar = () => {
-    return (
-      <>
-        <Link to="/">
-          <li className="nav-item nav-link">Home</li>
-        </Link>
+	const unauthenticatedNavBar = () => {
+		return (
+			<>
+				<Link to='/'>
+					<li className='nav-item nav-link'>Home</li>
+				</Link>
 
-        <Link to="/howitworks">
-          <li className="nav-item nav-link">Getting Started</li>
-        </Link>
+				<Link to='/howitworks'>
+					<li className='nav-item nav-link'>Guide</li>
+				</Link>
 
-        <Link to="/budget">
-          <li className="nav-item nav-link">Budget</li>
-        </Link>
+				<Link to='/login'>
+					<li className='nav-item nav-link'>Login</li>
+				</Link>
+				<Link to='/register'>
+					<li className='nav-item nav-link'>Register</li>
+				</Link>
+			</>
+		);
+	};
 
-        <button
-          type="button"
-          className="logout-btn"
-          onClick={onClickLogoutHandler}
-        >
-          Logout
-        </button>
-      </>
-    );
-  };
+	const authenticatedNavBar = () => {
+		return (
+			<>
+				<Link to='/'>
+					<li className='nav-item nav-link'>Home</li>
+				</Link>
 
-  return (
-    <div className="nav-container">
-      <div id="navbarText">
-        <ul className="navbar-links">
-          {!isAuthenticated ? unauthenticatedNavBar() : authenticatedNavBar()}
-        </ul>
-        <span className="navbar-text"></span>
-      </div>
-    </div>
-  );
+				<Link to='/howitworks'>
+					<li className='nav-item nav-link'>Getting Started</li>
+				</Link>
+
+				<Link to='/budget'>
+					<li className='nav-item nav-link'>Budget</li>
+				</Link>
+
+				<Link to='/' onClick={onClickLogoutHandler}>
+					<li className='nav-item nav-link'>Logout</li>
+				</Link>
+			</>
+		);
+	};
+
+	return (
+		<header id='navbar'>
+			<Container className='header-nav'>
+				<div className='logo'></div>
+				<label htmlFor='hamburger'>
+					<i className='fas fa-bars'></i>
+				</label>
+				<input type='checkbox' id='hamburger' />
+
+				<ul className='nav'>
+					{!isAuthenticated ? unauthenticatedNavBar() : authenticatedNavBar()}
+				</ul>
+			</Container>
+		</header>
+	);
 }
 
 export default NavBar;

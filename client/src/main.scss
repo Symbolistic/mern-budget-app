@@ -1,0 +1,30 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700|PT+Sans:400,500,700|Rozha+One');
+
+@import 'Variables';
+@import './components/NavBar/NavBar';
+@import './components/Home/TopImg';
+@import './components/Home/About';
+@import './components/Home/GettingStarted';
+@import './components/Footer/Footer.scss';
+@import 'Global';
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	letter-spacing: 0.1em;
+}
+
+html,
+body {
+	position: relative;
+	background-color: #f2f4f7;
+	font-family: $textFont, sans-serif;
+	width: 100%;
+	height: 100vh;
+	overflow-x: hidden;
+}
+
+.wrapper {
+	max-width: 2000px;
+	margin: auto;
+}

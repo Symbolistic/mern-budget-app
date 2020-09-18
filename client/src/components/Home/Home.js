@@ -1,24 +1,16 @@
-import React from "react";
-import "../Home/Home.css";
-import { Link } from "react-router-dom";
+import React from 'react';
+import TopImg from './TopImg';
+import About from './About';
+import GettingStarted from './GettingStarted';
 
-function Home(props) {
-  return (
-    <div id="home-container">
-      <div id="header">
-        <div className="info">
-          <h1>Lucid Budget</h1>
-          <p>Its time to take control of your spending habits</p>
-        </div>
-
-        <div className="btns">
-          <Link to="/howitworks">
-            <button className="btn">Getting Started</button>
-          </Link>
-        </div>
-      </div>
-    </div>
-  );
+function Home() {
+	return (
+		<div id='home-container'>
+			<TopImg />
+			<About />
+			<GettingStarted />
+		</div>
+	);
 }
 
 export default Home;

@@ -1,315 +1,316 @@
 .dashboard-container {
-  display: grid;
-  gap: 20px;
-  grid-template-columns: 1fr;
-  margin-top: 20px;
+	display: grid;
+	gap: 20px;
+	grid-template-columns: 1fr;
+	margin-top: 20px;
+	height: 100%;
 }
 
 #calendar {
-  display: grid;
-  text-align: center;
-  max-height: 100%;
+	display: grid;
+	text-align: center;
+	max-height: 100%;
 }
 
 #month-year {
-  margin-bottom: 20px;
+	margin-bottom: 20px;
 }
 
 #months {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 10px;
-  margin: auto;
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr;
+	gap: 10px;
+	margin: auto;
 }
 
 .month-btn {
-  padding: 5px;
+	padding: 5px;
 }
 
 .radio {
-  padding-right: 15px;
+	padding-right: 15px;
 }
 
 #charts-container {
-  display: grid;
-  background-color: #ffffff;
-  margin: 30px 0;
-  border-radius: 0.25rem;
-  padding: 15px;
-  text-align: center;
-  box-shadow: 0.3em 0.5em 1.3em rgba(31, 36, 38, 0.05);
-  gap: 10px;
+	display: grid;
+	background-color: #ffffff;
+	margin: 30px 0;
+	border-radius: 0.25rem;
+	padding: 15px;
+	text-align: center;
+	box-shadow: 0.3em 0.5em 1.3em rgba(31, 36, 38, 0.05);
+	gap: 10px;
 }
 
 #chart-data {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 10px;
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+	gap: 10px;
 }
 
 #doughnut-chart-container {
-  border-right: 1px dashed black;
-  min-height: 300px;
-  max-height: 500px;
-  height: 100%;
+	border-right: 1px dashed black;
+	min-height: 300px;
+	max-height: 500px;
+	height: 100%;
 }
 
 #bar-chart-container {
-  min-height: 300px;
-  max-height: 500px;
-  height: 100%;
+	min-height: 300px;
+	max-height: 500px;
+	height: 100%;
 }
 
 canvas {
-  height: 100% !important;
-  width: 100% !important;
-  display: block;
+	height: 100% !important;
+	width: 100% !important;
+	display: block;
 }
 
 /* This will help with the responsiveness of the bar charts since they easily glitch */
 @media screen and (max-width: 730px) {
-  #doughnut-chart-container {
-    border-right: none;
-    border-bottom: 1px dashed black;
-    grid-template-columns: 1fr;
-  }
+	#doughnut-chart-container {
+		border-right: none;
+		border-bottom: 1px dashed black;
+		grid-template-columns: 1fr;
+	}
 }
 
 #create-budget-container {
-  height: 100%;
-  margin-top: 30px;
-  text-align: center;
+	height: 100%;
+	margin-top: 30px;
+	text-align: center;
 }
 
 .basic-budget-btn {
-  color: #fff !important;
-  text-transform: uppercase;
-  text-decoration: none;
-  background: purple;
-  padding: 10px;
-  border-radius: 5px;
-  display: inline-block;
-  border: none;
-  transition: all 0.4s ease 0s;
-  margin-left: 15px;
-  margin-top: 30px;
-  font-size: 14px;
-  font-weight: 600;
+	color: #fff !important;
+	text-transform: uppercase;
+	text-decoration: none;
+	background: purple;
+	padding: 10px;
+	border-radius: 5px;
+	display: inline-block;
+	border: none;
+	transition: all 0.4s ease 0s;
+	margin-left: 15px;
+	margin-top: 30px;
+	font-size: 14px;
+	font-weight: 600;
 }
 
 #income-container {
-  background-color: #ffffff;
-  margin: 30px 0;
-  border-radius: 0.25rem;
-  padding: 10px;
-  box-shadow: 0.3em 0.5em 1.3em rgba(31, 36, 38, 0.05);
+	background-color: #ffffff;
+	margin: 30px 0;
+	border-radius: 0.25rem;
+	padding: 10px;
+	box-shadow: 0.3em 0.5em 1.3em rgba(31, 36, 38, 0.05);
 }
 
 .header-area {
-  margin-bottom: 30px;
-  overflow-wrap: break-word;
+	margin-bottom: 30px;
+	overflow-wrap: break-word;
 }
 
 .header-area > h2 {
-  color: purple;
-  font-weight: 700;
+	color: purple;
+	font-weight: 700;
 }
 
 .addCategory {
-  color: #fff !important;
-  text-transform: uppercase;
-  text-decoration: none;
-  background: purple;
-  padding: 15px;
-  margin: 10px 0;
-  border-radius: 5px;
-  display: inline-block;
-  border: none;
-  transition: all 0.4s ease 0s;
+	color: #fff !important;
+	text-transform: uppercase;
+	text-decoration: none;
+	background: purple;
+	padding: 15px;
+	margin: 10px 0;
+	border-radius: 5px;
+	display: inline-block;
+	border: none;
+	transition: all 0.4s ease 0s;
 }
 
 .addCategory:hover {
-  background: #9602d1;
-  letter-spacing: 1px;
-  -webkit-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
-  -moz-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
-  box-shadow: 5px 40px -10px rgba(0, 0, 0, 0.57);
-  transition: all 0.4s ease 0s;
+	background: #9602d1;
+	letter-spacing: 1px;
+	-webkit-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
+	-moz-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
+	box-shadow: 5px 40px -10px rgba(0, 0, 0, 0.57);
+	transition: all 0.4s ease 0s;
 }
 
 .data-wrapper {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 50px;
-  text-align: center;
-  margin-top: 20px;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 50px;
+	text-align: center;
+	margin-top: 20px;
 }
 
 .data-container {
-  justify-self: center;
-  align-self: start;
+	justify-self: center;
+	align-self: start;
 }
 
 form {
-  margin-bottom: 20px;
+	margin-bottom: 20px;
 }
 
 .data-header {
-  position: relative;
-  margin-bottom: 10px;
-  font-size: 18px;
-  color: #45818e;
+	position: relative;
+	margin-bottom: 10px;
+	font-size: 18px;
+	color: #45818e;
 }
 
 #expense-container {
-  display: grid;
-  background-color: #ffffff;
-  margin: 30px 0;
-  padding: 10px;
-  border-radius: 0.25rem;
-  box-shadow: 0.3em 0.5em 1.3em rgba(31, 36, 38, 0.05);
+	display: grid;
+	background-color: #ffffff;
+	margin: 30px 0;
+	padding: 10px;
+	border-radius: 0.25rem;
+	box-shadow: 0.3em 0.5em 1.3em rgba(31, 36, 38, 0.05);
 }
 
 #entries-data {
-  display: grid;
-  margin-top: 10px;
+	display: grid;
+	margin-top: 10px;
 }
 
 .budget-expense-title {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  background-color: black;
-  color: #ffffff;
-  font-size: 28px;
-  padding: 5px;
-  margin-bottom: 5px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	background-color: black;
+	color: #ffffff;
+	font-size: 28px;
+	padding: 5px;
+	margin-bottom: 5px;
 }
 
 .close {
-  position: absolute;
-  top: 0px;
-  right: 0px;
-  background: none;
-  border: none;
-  outline: none;
-  cursor: pointer;
-  font-weight: bold;
-  font-size: 14px;
+	position: absolute;
+	top: 0px;
+	right: 0px;
+	background: none;
+	border: none;
+	outline: none;
+	cursor: pointer;
+	font-weight: bold;
+	font-size: 14px;
 }
 
 .description {
-  font-weight: bold;
+	font-weight: bold;
 }
 
 .data {
-  text-align: center;
-  padding-top: 10px;
-  color: black;
+	text-align: center;
+	padding-top: 10px;
+	color: black;
 }
 
 .edit-input {
-  width: 100%;
-  height: 100%;
-  padding: 5px;
+	width: 100%;
+	height: 100%;
+	padding: 5px;
 }
 
 .add-entry {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+	display: grid;
+	grid-template-columns: 1fr 1fr;
 }
 
 .add-entry > input {
-  border: none;
-  border-bottom: 1px solid black;
-  outline: none;
-  padding-bottom: 5px;
+	border: none;
+	border-bottom: 1px solid black;
+	outline: none;
+	padding-bottom: 5px;
 }
 
 .entry-description {
-  text-align: center;
-  padding-top: 10px;
-  font-weight: bold;
+	text-align: center;
+	padding-top: 10px;
+	font-weight: bold;
 }
 
 .entry-price {
-  text-align: center;
-  padding-top: 10px;
-  color: black;
+	text-align: center;
+	padding-top: 10px;
+	color: black;
 }
 
 .entry-price {
-  display: flex;
+	display: flex;
 }
 
 .entry-price > input {
-  text-align: center;
-  padding-bottom: 5px;
+	text-align: center;
+	padding-bottom: 5px;
 }
 
 .entry-data {
-  border: none;
-  border-bottom: 1px solid black;
-  outline: none;
+	border: none;
+	border-bottom: 1px solid black;
+	outline: none;
 }
 
 .data-submit {
-  padding: 0;
-  cursor: pointer;
+	padding: 0;
+	cursor: pointer;
 }
 
 .table-header {
-  background-color: purple !important;
-  color: #ffffff !important;
-  font-weight: bold;
+	background-color: purple !important;
+	color: #ffffff !important;
+	font-weight: bold;
 }
 
 .row {
-  padding: 0;
-  margin: 0;
-  list-style: none;
+	padding: 0;
+	margin: 0;
+	list-style: none;
 
-  display: flex;
-  flex-direction: row;
-  min-width: 340px;
-  max-width: 340px;
-  border-bottom: 1px solid #dddddd;
-  border-radius: 5px 5px 0 0;
+	display: flex;
+	flex-direction: row;
+	min-width: 340px;
+	max-width: 340px;
+	border-bottom: 1px solid #dddddd;
+	border-radius: 5px 5px 0 0;
 }
 
 .row:nth-of-type(odd) {
-  background-color: #f3f3f3;
+	background-color: #f3f3f3;
 }
 
 .flex-item {
-  padding: 5px;
-  font-size: 0.8em;
-  text-align: center;
-  min-width: 10px;
-  word-wrap: break-word;
-  /* border: 1px solid black; */
+	padding: 5px;
+	font-size: 0.8em;
+	text-align: center;
+	min-width: 10px;
+	word-wrap: break-word;
+	/* border: 1px solid black; */
 }
 
 .flex1 {
-  flex: 1 1 20em;
-  min-width: 10px;
+	flex: 1 1 20em;
+	min-width: 10px;
 }
 .flex2 {
-  flex: 2 2 20em;
-  min-width: 90px;
+	flex: 2 2 20em;
+	min-width: 90px;
 }
 .flex3 {
-  flex: 3 3 20em;
-  min-width: 70px;
+	flex: 3 3 20em;
+	min-width: 70px;
 }
 .flex4 {
-  flex: 4 4 20em;
-  min-width: 35px;
-  cursor: pointer;
+	flex: 4 4 20em;
+	min-width: 35px;
+	cursor: pointer;
 }
 .flex5 {
-  flex: 5 5 20em;
-  min-width: 35px;
-  cursor: pointer;
+	flex: 5 5 20em;
+	min-width: 35px;
+	cursor: pointer;
 }
