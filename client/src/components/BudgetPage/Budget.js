@@ -303,7 +303,7 @@ const Budget = () => {
 			<div className='dashboard-container'>
 				<div id='calendar'>
 					<div id='month-year'>
-						<h2>{allMonths[month]} 2020</h2>
+						<h2>{allMonths[month]} 2021</h2>
 					</div>
 
 					<div id='months'>
